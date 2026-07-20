@@ -1,0 +1,341 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Sora:wght@100..800&display=swap');
+
+body{
+    padding: 0;
+    padding-top: 105px;
+    margin: 0;
+}
+
+.navbar{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 40px 0;
+    font-size: 1.5em;
+    background-color: #dad7cd;
+    font-family: "Frances", serif;
+    border-bottom: 1px solid #588157;
+}
+
+.navbar ul {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2em;
+    list-style-type: none;
+    margin: 0;
+}
+
+.navbar ul li a{
+    text-decoration: none;
+    color: #3a5a40;
+}
+
+#profilo{
+    position: absolute;
+    right: 0;
+    margin-right: 1.5em;
+}
+
+#profilo a{
+    padding: 0.5em;
+    border-radius: 55%;
+    background-color: #3a5a40;
+}
+
+.fa-user{
+    color: #dad7cd;
+}
+
+#plane{
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    background-color: #dad7cd;
+    border-bottom: 1px solid #3a5a40;
+}
+
+#plane-text{
+    flex: 0 0 65%;
+    padding-left: 3em;
+    padding-bottom: 4em;
+}
+
+#plane img{
+    object-fit:cover;
+    width: 100%;
+    height: 100%;
+}
+
+#plane-text p{
+    font-family: 'Sora', serif;
+    margin-top: 4em;
+    color: #588157;
+    font-weight: 300;
+}
+
+#plane-text h1{
+    font-family: "Frances", serif;
+    margin-top: 1em;
+    width: 80%;
+    color: #2D3A1F;
+    font-size: 5.5em;
+    line-height: 90%;
+    margin-bottom: 0;
+}
+
+#plane-text h2{
+    margin-top:0.4em;
+    font-family: "Frances", serif;
+    width: 80%;
+    color: #588157;
+    font-size: 2.5em;
+    line-height: 90%;
+}
+
+#plane-text a {
+  position: relative;
+  display: block;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: 4em;
+  margin-top: 10em;
+  padding: 1em;
+  background-color: #3a5a40;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: white;
+  font-size: 1.5em;
+}
+
+#plane-text a span{
+    position: relative;
+}
+
+#plane-text a span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+
+  width: 100%;
+  height: 2px;
+  background-color: white;
+
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+#plane-text a:hover span::after {
+  transform: scaleX(1);
+}
+
+#main-part{
+    background-color: #dad7cd;
+    align-items: center;
+}
+
+#gradient-text{
+    text-align: center;
+    font-size: 7em;
+    background: linear-gradient( to right,#588157, #2D3A1F);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+    padding-top:1em;
+}
+
+#cards{
+    margin-top: 8em;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 8em;
+}
+
+#cards div{
+    border-top: 1px solid #2D3A1F;
+}
+
+#cards div span{
+    color: #3a5a40;
+    text-align: center;
+    font-size: 2em;
+    margin: 0;
+}
+
+#cards div h2{
+    font-size: 3em;
+    color: #588157;
+    margin-bottom: 0;
+}
+
+#cont{
+    padding: 0 12%;
+}
+
+footer{
+    background: #588157;
+    background: linear-gradient(180deg, rgba(88, 129, 87, 1) 0%, rgba(66, 92, 58, 1) 39%, rgba(45, 58, 31, 1) 100%);
+    height: 20em;
+    color: #dad7cd;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    padding: 0 3em;
+    padding-bottom: 2em;
+    gap: 8em;
+    border-top: 1px solid #2D3A1F;
+}
+
+#socials {
+    color: #dad7cd;
+    display: flex;
+    flex-direction: row;
+    font-size: 2em;
+    gap: 0.8em;
+}
+
+footer p{
+    font-family: 'Sora', serif;
+    font-size: 1.3em;
+    margin: 0;
+}
+
+footer a{
+    text-align: none;
+    color: #dad7cd;
+}
+
+#useful-links{
+    display: flex;
+    flex-direction: row;
+    gap: 2em;
+}
+
+#useful-links a{
+    text-decoration: none;
+    font-family: 'Sora', serif;
+}
+
+#phone-num{
+    margin-bottom: 2em;    
+    position: relative;
+}
+
+#phone-num p{
+    text-align: right;
+}
+
+#main-part{
+    padding-bottom: 3em;
+}
+
+#slideshow{
+    position: relative;
+    margin: auto;
+}
+
+#slideshow img{
+    width: 100%;
+    object-fit: cover;    
+}
+
+.slideshow-container {
+    max-width: 1000px;
+    position: relative;
+    margin: auto;
+}
+
+/* Hide the images by default */
+.mySlides {
+
+    display: none;
+    width: 400px;
+    height: 400px;
+}
+
+.mySlides img{
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+/* Next & previous buttons */
+.prev, .next {
+    cursor: pointer;
+    aspect-ratio: 1;
+    width: 20%;
+    position: absolute;
+    /* display: inline; */
+    top: 50%;
+    /* margin-top: -22px; */
+    padding: 16px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    user-select: none;
+    border-radius: 50%;
+}
+
+/* Position the "next button" to the right */
+.next {
+    right: 0; 
+    display: inline;
+    margin-left: auto;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+    background-color: rgba(0, 0, 0, 0.608);
+}
+
+/* Caption text */
+.text {
+    color: #f2f2f2;
+    font-size: 15px;
+    padding: 8px 12px;
+    position: absolute;
+    bottom: 8px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+    color: #f2f2f2;
+    font-size: 12px;
+    padding: 8px 12px;
+    position: absolute;
+    top: 0;
+}
+
+/* The dots/bullets/indicators */
+.dot {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+}
+
+.active, .dot:hover {
+    background-color: #717171;
+}
+
+/* Fading animation */
+.fade {
+    animation-name: fade;
+    animation-duration: 1.5s;
+}
+
+@keyframes fade {
+    from {opacity: .4}
+    to {opacity: 1}
+}
