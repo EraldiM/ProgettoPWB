@@ -152,6 +152,20 @@ body{
     display: flex;
     justify-content: center;
     padding: 0 2em;
+    align-items: stretch;
+}
+
+.element{
+    display: flex;
+    flex-direction: column;
+}
+
+.slideShow-container{
+    margin-top: auto;
+}
+
+.description{
+    height: 3em;
 }
 
 #grid{
@@ -233,12 +247,12 @@ footer a{
     padding-bottom: 3em;
 }
 
-.mySlides1, .mySlides2{
+.mySlides1, .mySlides2, .mySlides3{
     height: 30em;
     width: inherit;
 }
 
-.mySlides1 img, .mySlides2 img{
+.mySlides1 img, .mySlides2 img, .mySlides3 img{
     object-fit: cover;
     height: 100%;
     width: 100%;
@@ -266,4 +280,14 @@ footer a{
 
 .next:hover, .prev:hover{
     background-color: rgba(0,0,0,0.5);
+}
+
+.fade {
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@keyframes fade {
+  from {opacity: .4}
+  to {opacity: 1}
 }
