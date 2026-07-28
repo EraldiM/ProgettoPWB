@@ -52,6 +52,7 @@ body{
 #plane{
     display: flex;
     flex-direction: row;
+    /* justify-content:space-between; */
     overflow: hidden;
     background-color: #dad7cd;
     border-bottom: 1px solid #3a5a40;
@@ -59,12 +60,17 @@ body{
 
 #plane-text{
     flex: 0 0 65%;
+    /* width: 60%; */
     padding-left: 3em;
     padding-bottom: 4em;
 }
+#plane-img{
+    flex: 35 1 0;
+    overflow: hidden;
+}
 
 #plane img{
-    object-fit:cover;
+    object-fit: cover;
     width: 100%;
     height: 100%;
 }
@@ -290,4 +296,81 @@ footer a{
 @keyframes fade {
   from {opacity: .4}
   to {opacity: 1}
+}
+
+/* Login.html part*/
+
+#login-main-div{
+    background-color: #dad7cd;
+    padding: 3em 2em;
+    margin: 0; 
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+#login-div{
+    padding: 2em 3em;
+    border: 1px solid #588157;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+#login-div h1{
+    color: #344e41 ;
+    font-size: 4em;
+    font-family: "Sora", serif;
+}
+
+#login-div p{
+    font-family: "Sora", solid;
+    font-weight: 300;
+    
+}
+
+#login-div input[type=text], #login-div input[type=password]{
+    padding: 0.7em;
+    font-size: 1.3em;
+    width: 55%;
+    border-radius: 15px;
+    font-weight: 500;
+}
+
+#login-div input[type=text]:focus, #login-div input[type=password]focus{
+    outline: 0;
+    box-shadow: inset 0 0 8px rgba(226,239,207,.7);
+}
+
+#login-button-container{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin-top: 3em;
+}
+
+#signup-text{
+    margin-top: 2em;
+    text-align: right;
+}
+
+#signup-text a{
+    right: 0;
+    text-decoration: none;
+    color: black;
+}
+
+#login-div input[type=button]{
+    padding: 1em;
+    width: 30%;
+    border-radius: 30px;
+    font-size: 1.2em;
+    text-align: center;
+    border-radius: 30px;
+}
+
+#user-name{
+    padding: 0.7em;
 }
