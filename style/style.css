@@ -298,11 +298,15 @@ footer a{
   to {opacity: 1}
 }
 
-/* Login.html part*/
+/* login.html and signin.html part*/
+
+#form{
+    margin: 0;
+}
 
 #login-main-div{
     background-color: #dad7cd;
-    padding: 3em 2em;
+    /* padding: 3em 2em; */
     margin: 0; 
     display: flex;
     justify-content: center;
@@ -310,7 +314,8 @@ footer a{
 }
 
 #login-div{
-    padding: 2em 3em;
+    padding: 3em 6em;
+    margin: 5em;
     border: 1px solid #588157;
     border-radius: 30px;
     display: flex;
@@ -334,7 +339,7 @@ footer a{
 #login-div input[type=text], #login-div input[type=password]{
     padding: 0.7em;
     font-size: 1.3em;
-    width: 55%;
+    width: 75%;
     border-radius: 15px;
     font-weight: 500;
 }
@@ -363,8 +368,7 @@ footer a{
 }
 
 #login-div input[type=button]{
-    padding: 1em;
-    width: 30%;
+    padding: 1em 2em;
     border-radius: 30px;
     font-size: 1.2em;
     text-align: center;
