@@ -1,35 +1,51 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sign in</title>
     <link href="../style/style.css" rel="stylesheet">
-    <!-- <script src="../JS/script.js"></script> -->
+    <script src="../JS/signup.js" defer></script>
     <script src="https://kit.fontawesome.com/f6a32bf7bc.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <nav class="navbar">
         <ul>
-            <li><a href="">Home</a></li>
+            <li><a href="/index.html">Home</a></li>
             <li><a href="">Esplora</a></li>
             <li><a href="">Chi siamo</a></li>
             <li><a href="">Testimonianze</a></li>
-            <li id="profilo"><a href=""><i class="fas fa-user"></i></a></li>
+            <li id="profilo"><a href="../private/profile.html"><i class="fas fa-user"></i></a></li>
         </ul>
     </nav>
     <form id="form">
         <div id="login-main-div">
             <div id="login-div">
                 <h1>Registrati</h1>
+                <p>Nome</p>
+                <input type="text" name="" value="" id="name">
+                <p>Cognome</p>
+                <input type="text" name="" value="" id="last_name">
+                <p>Sesso</p>
+                <div id="sex-select-wrapper">
+                    <select id="sex-select">
+                        <option value="">Seleziona il tuo sesso.</option>
+                        <option value="1">Maschio</option>
+                        <option value="0">Femmina</option>
+                    </select>
+                </div>
                 <p>Nome Utente:</p>
                 <input type="text" name="" value="" id="username">
                 <p>Password:</p>
                 <input type="password" name="" value="" id="password">
                 <p>Conferma la Password:</p>
                 <input type="password" name="" value="" id="password2">
+                <p id="signup-error"></p>
+                <div id="signup-text">
+                    <a href="/signup.html">Hai già un account? Accedi</a>
+                </div>
                 <div id="login-button-container">
-                    <input type="button" id="abc" name="" value="Sign In">
+                    <input type="button" id="signup" name="" value="Sign In">
                 </div>
             </div>
         </div>

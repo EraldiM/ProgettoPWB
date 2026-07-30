@@ -367,6 +367,41 @@ footer a{
     color: black;
 }
 
+#sex-select-wrapper{
+    border-radius: 30px;
+    display: inline-block;
+    width: 85%;
+    overflow: hidden;
+    border: 2px solid #5f5f68;
+    /* border: 0px; */
+    background: white;
+}
+
+#sex-select{
+    outline: none;
+    width: 95%;
+    padding: 1em 2em;
+    font-family: "Sora", serif;
+    background-color: white;
+    border: 0px;
+    
+}
+
+#signup-error{
+    color: red;
+    width: 12em;
+    overflow-wrap: break-word;
+    text-decoration: underline;
+    border-radius: 15px;
+}
+
+#login-text-error{
+    color: red;
+    width: 12em;
+    overflow-wrap: break-word;
+    text-decoration: underline;
+}
+
 #login-div input[type=button]{
     padding: 1em 2em;
     border-radius: 30px;
