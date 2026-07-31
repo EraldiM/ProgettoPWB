@@ -23,14 +23,14 @@ const pool = mysql.createPool({
 function authenticateToken(req, res, next){
     const token = req.cookies.token;
     if (!token){ // if the user is not authenitcated we redirect him on the login page
-        return res.redirect(302, "/login.html");
+        return res.redirect(302, "/public/login.html");
     }
     try {
         const payload = jwt.verify(token, JWT_SECRET);
         req.user = payload;
         next();
     } catch (error) {
-        return res.redirect(302, "/index.html");
+        return res.redirect(302, "/public/index.html");
     }
 }
 
@@ -134,6 +134,40 @@ app.post("/signup", async (req, res) =>{
     }
 });
 
+app.get("/GET/profile", async(req, res) => {
+    console.log("contattato XD");
+    const token = req.cookies.token;
+
+    if(!token){
+        return res.redirect(302, "/public/index.html");
+    }
+
+    try {
+        const payload = jwt.verify(token, JWT_SECRET);
+
+        let id = payload.userID;
+        const query = `SELECT user_name, name, last_name, birth_date, creation_date, sex
+        FROM utenti3 WHERE 
+        id = ?`;
+
+        try {
+            const righe = await pool.promise().execute(query, [id]);
+            const user = righe[0];
+
+            res.json(user);
+            console.log(user);
+
+        } catch (error2) {
+            console.log(error2);
+            return res.status(401).json({error: "Errore nel database, utente non trovato"});
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(401).json({error: "Token non valido o scaduto"});
+    }
+
+});
+
 app.listen(port, () => {
-    console.log(`Server in ascolto su http://localhost:${port}`);
+    console.log(`Server in ascolto su http://localhost:${port}/public/index.html`);
 })

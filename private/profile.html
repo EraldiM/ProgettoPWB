@@ -6,30 +6,45 @@
     <title>Login</title>
     <link href="../style/style.css" rel="stylesheet">
     <!-- <script src="../JS/script.js"></script> -->
+    <<script src="../JS/profile.js" defer></script>
     <script src="https://kit.fontawesome.com/f6a32bf7bc.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <nav class="navbar">
         <ul>
             <li><a href="/public/index.html">Home</a></li>
-            <li><a href="">Esplora</a></li>
-            <li><a href="">Chi siamo</a></li>
-            <li><a href="">Testimonianze</a></li>
-            <li id="profilo"><a href="../private/profile.html"><i class="fas fa-user"></i></a></li>
+            <li><a href="/publc/explore.html">Esplora</a></li>
+            <li><a href="/public/about.html">Chi siamo</a></li>
+            <li><a href="/public/results.html">Testimonianze</a></li>
+            <li id="profilo"><a href="../private/profile.html"><i class="fas fa-user "></i></a></li>
         </ul>
     </nav>
     <div id="profile-div">
-        <h1>Benvenuto!</h1>
+        <h1 id="welcome">Benvenuto!</h1>
         <div id="card-profile">
             <div id="gradient"></div>
-            <div id="card-image-cotainer"></div> 
-                <p>Lorem ipsumasdhjnuijdsgbhvIWUYEBFGFIUWDGBIUWSDBG HIBF ihBEWQF IHBEFIhbEWIFH BEIQFB IHBEQWF IBEiBEI bIUBWeirfubaerigbdfibgISDBGF</p>
-                <div id="user-info">
-                   <p id="user-name"></p> 
-                   <p id="name"></p>
-                   <p id="last-name"></p>
-                   <p id="age"></p>
-                   <p id="subcription-date"></p>
+            <div id="card-image-cotainer">
+                <i class="fas fa-user" id="profile-pic"></i>
+            </div> 
+            <div id="user-info">
+                <div id="columns">
+                    <div id="col1">
+                       <p id="profile-user-name-ph">Nome utente: </p> 
+                       <p id="profile-name-ph">Nome: </p>
+                       <p id="profile-last-name-ph">Cognome: </p>
+                       <p id="profile-age-ph">Anni: </p>
+                       <p id="profile-sex-ph">Sesso: </p>
+                       <p id="profile-subscription-date-ph">Data di iscrizione: </p>
+                    </div>
+                    <div id="col2">
+                       <p id="profile-user-name"></p> 
+                       <p id="profile-name"></p>
+                       <p id="profile-last-name"></p>
+                       <p id="profile-age"></p>
+                       <p id="profile-sex"></p>
+                       <p id="profile-subscription-date"></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -49,8 +64,8 @@
             </div>
             <div id="useful-links">
                 <a href="/public/login.html">Sign in</a>
-                <a href="">About Us</a>
-                <a href="">Terms of Service</a>
+                <a href="/public/about.html">About Us</a>
+                <a href="tos.html">Terms of Service</a>
             </div>
         </div>
     </footer>
