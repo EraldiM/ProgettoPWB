@@ -17,8 +17,11 @@ document.getElementById("login").addEventListener("click", async function(event)
         })  
 
         const data = await res.json();
-        let message = data.message;
-        console.log(message);
+        // let message = data.message;
+        // console.log(message);
+        if (data.success == true){
+            window.location.replace("/private/profile.html");
+        }
     } catch (error) {
         document.getElementById("login-text-error").textContent = "Nome utente o password non corretti!";
         console.log(error);

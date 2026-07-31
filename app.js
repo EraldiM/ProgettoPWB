@@ -34,10 +34,29 @@ function authenticateToken(req, res, next){
     }
 }
 
-app.use(express.static(__dirname + "/public"));
+function redirectIfAuthenticated(req, res, next){
+    const token = req.cookies.token;
+    console.log("sono qua");
+
+    if (!token){
+        return next();
+    }
+    try {
+        jwt.verify(token, JWT_SECRET);
+
+        return res.redirect("/private/profile.html");
+    } catch (error) {
+        res.clearCookie("token");
+        return next();
+    }
+}
+
 app.use('/JS', express.static(__dirname + "/JS"));
 app.use('/style', express.static(__dirname + "/style"));
 app.use('/imgs', express.static(__dirname + "/imgs"));
+app.get("/public/login.html", redirectIfAuthenticated, (req,res) => {res.sendFile(__dirname + "/public/login.html")});
+app.get("/public/signup.html", redirectIfAuthenticated, (req,res) => {res.sendFile(__dirname + "/public/signup.html")});
+app.use('/public', express.static(__dirname + "/public"));
 app.use('/private', authenticateToken, express.static(__dirname + "/private"));
 
 // login handling
@@ -63,7 +82,7 @@ app.post("/login", async (req, res) =>{
         res.cookie("token", token,{
             httpOnly: true,
             secure: true,
-            maxAge: 3600000,
+            maxAge: 36000000,
             sameSite: "strict"
         });
 
@@ -78,10 +97,10 @@ app.post("/login", async (req, res) =>{
 });
 
 app.post("/signup", async (req, res) =>{
-    const {username, password, name, last_name, sex} = req.body;
-    const query = "INSERT INTO utenti3 (user_name, password, name, last_name, sex) VALUES(?, ?, ?, ?, ?)";
+    const {username, password, name, last_name, sex, birth_date} = req.body;
+    const query = "INSERT INTO utenti3 (user_name, password, name, last_name, sex, birth_date) VALUES(?, ?, ?, ?, ?, ?)";
     try {
-        const righe = await pool.promise().execute(query, [username, password, name, last_name, sex]);
+        const righe = await pool.promise().execute(query, [username, password, name, last_name, sex, birth_date]);
         const user = righe[0];
 
         const payload = {
@@ -100,8 +119,6 @@ app.post("/signup", async (req, res) =>{
             maxAge: 3600000,
             sameSite: "strict"
         });
-
-        // res.cookie-parser(parseInt)
 
         res.json({
             success: true,

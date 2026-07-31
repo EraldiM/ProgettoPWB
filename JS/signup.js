@@ -6,9 +6,12 @@ document.getElementById("signup").addEventListener("click", async function(event
     const name = document.getElementById("name").value;
     const last_name = document.getElementById("last_name").value;
     const sex = parseInt(document.getElementById("sex-select").value);
-    const soloLettere = /^\p{L}+$/u;
+    const birth_date = document.getElementById("birth_date").value;
+    console.log(typeof (birth_date));
+    const soloLettere = /^\p{L}+$/u; // Regex (regular expression) that checks if name and last_name contains only valid characters for a "real" name.
     
-    if(!username || !password || !confirm_password || !name || !last_name || !sex){
+    // starting to check various parameters for the user fields.
+    if(!username || !password || !confirm_password || !name || !last_name || !sex || !birth_date){
         alert("Formato non valido");
         document.getElementById("signup-error").textContent = "Formato non valido";
         return;
@@ -46,9 +49,11 @@ document.getElementById("signup").addEventListener("click", async function(event
         password: password,
         name: name,
         last_name: last_name,
-        sex: sex
+        sex: sex,
+        birth_date: birth_date
     };
 
+    // making the fetch for the backend.
     try {
         const res = await fetch("/signup", {
             method: "POST",
@@ -57,8 +62,11 @@ document.getElementById("signup").addEventListener("click", async function(event
         });
 
         const data = await res.json();
-        let risposta = data.message;
-        console.log(risposta);
+        // let risposta = data.message;
+        // console.log(risposta);
+        if (data.success == true){
+            window.location.replace("/private/profile.html");
+        }
     } catch (error) {
         console.log("Errore nella richiesta: " + error);
     }
