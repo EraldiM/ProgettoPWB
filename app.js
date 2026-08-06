@@ -30,13 +30,12 @@ function authenticateToken(req, res, next){
         req.user = payload;
         next();
     } catch (error) {
-        return res.redirect(302, "/public/index.html");
+        return res.redirect(302, "/public/login.html");
     }
 }
 
 function redirectIfAuthenticated(req, res, next){
     const token = req.cookies.token;
-    console.log("sono qua");
 
     if (!token){
         return next();
@@ -72,8 +71,6 @@ app.post("/login", async (req, res) =>{
             userName: user.user_name
         };
 
-        console.log(user.user_name);
-
         const token = jwt.sign(payload, JWT_SECRET, {
             algorithm: "HS256",
             expiresIn: "1h"
@@ -82,7 +79,7 @@ app.post("/login", async (req, res) =>{
         res.cookie("token", token,{
             httpOnly: true,
             secure: true,
-            maxAge: 36000000,
+            maxAge: 3600000000,
             sameSite: "strict"
         });
 
@@ -135,7 +132,6 @@ app.post("/signup", async (req, res) =>{
 });
 
 app.get("/GET/profile", async(req, res) => {
-    console.log("contattato XD");
     const token = req.cookies.token;
 
     if(!token){
@@ -155,7 +151,6 @@ app.get("/GET/profile", async(req, res) => {
             const user = righe[0];
 
             res.json(user);
-            console.log(user);
 
         } catch (error2) {
             console.log(error2);
@@ -166,6 +161,47 @@ app.get("/GET/profile", async(req, res) => {
         return res.status(401).json({error: "Token non valido o scaduto"});
     }
 
+});
+
+app.get("/GET/coach-list", async (req, res) =>{
+    const query = "SELECT * FROM coaches ORDER BY id ASC LIMIT 6"
+    try {
+        const row = await pool.promise().execute(query);
+        const coaches = row[0];
+
+        res.json(coaches);
+    } catch (error) {
+        console.log(error);
+        return res.status(401).json({error: "Errore nel database"});
+    }
+});
+
+app.get("/GET/disciplines", async (req, res) =>{
+    const query = "SELECT * FROM categories";
+    try {
+        const row = await pool.promise().execute(query);
+        const coaches = row[0];
+
+        res.json(coaches);
+    } catch (error) {
+        console.log(error);
+        return res.status(401).json({error: "Errore nel database"});
+    }
+});
+
+app.get("/GET/more-coaches", async (req, res) => {
+    const query = "SELECT * FROM coaches WHERE id > ? ORDER BY id ASC LIMIT 6";
+    coach_id = req.query.coach_id;
+    
+    try {
+        const row = await pool.promise().execute(query, [coach_id]);
+        const coaches = row[0];
+
+        res.json(coaches);
+    } catch (error) {
+        console.log("errore del DB: " + error);
+        res.json(error);
+    }
 });
 
 app.listen(port, () => {

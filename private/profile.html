@@ -6,7 +6,7 @@
     <title>Login</title>
     <link href="../style/style.css" rel="stylesheet">
     <!-- <script src="../JS/script.js"></script> -->
-    <<script src="../JS/profile.js" defer></script>
+    <script src="../JS/profile.js" defer></script>
     <script src="https://kit.fontawesome.com/f6a32bf7bc.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -27,24 +27,12 @@
                 <i class="fas fa-user" id="profile-pic"></i>
             </div> 
             <div id="user-info">
-                <div id="columns">
-                    <div id="col1">
-                       <p id="profile-user-name-ph">Nome utente: </p> 
-                       <p id="profile-name-ph">Nome: </p>
-                       <p id="profile-last-name-ph">Cognome: </p>
-                       <p id="profile-age-ph">Anni: </p>
-                       <p id="profile-sex-ph">Sesso: </p>
-                       <p id="profile-subscription-date-ph">Data di iscrizione: </p>
-                    </div>
-                    <div id="col2">
-                       <p id="profile-user-name"></p> 
-                       <p id="profile-name"></p>
-                       <p id="profile-last-name"></p>
-                       <p id="profile-age"></p>
-                       <p id="profile-sex"></p>
-                       <p id="profile-subscription-date"></p>
-                    </div>
-                </div>
+                <p class="profile-metrics">Nome utente:</p><p id="profile-user-name"></p>
+                <p class="profile-metrics">Nome:</p> <p id="profile-name"></p>
+                <p class="profile-metrics">Cognome:</p> <p id="profile-last-name"></p>
+                <p class="profile-metrics">Età:</p> <p id="profile-age"></p>
+                <p class="profile-metrics">Sesso:</p> <p id="profile-sex"></p>
+                <p class="profile-metrics">Data di iscrizione:</p> <p id="profile-subscription-date"></p>
             </div>
         </div>
     </div>

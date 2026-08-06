@@ -14,7 +14,7 @@ body{
     padding: 40px 0;
     font-size: 1.5em;
     background-color: #dad7cd;
-    font-family: "Frances", serif;
+    font-family: "Fraunces", serif;
     border-bottom: 1px solid #588157;
 }
 
@@ -431,7 +431,7 @@ footer a{
 
 #card-profile{
     flex:  0 0 60% ;
-    width: 60%;
+    width: 60em;
     margin: 0;
     padding-bottom: 3em;
     border: 1px solid #3a5a40;
@@ -452,12 +452,10 @@ footer a{
 
 #card-image-cotainer{
     position: absolute;
-    /* height: calc(12em ); */
     background-color: white;
     padding: 5em;
     margin: 0 auto;
     left: 50%;
-    /* transform: translateX(-50%); */
     transform: translate(-50%, -50%);
     border-radius: 50%;
     overflow: hidden;
@@ -465,27 +463,58 @@ footer a{
 
 #profile-pic{
     margin: 0;
-    /* position:fixed; */
     padding: 0;
-    /* font-size: 3em; */
     transform: scale(4);
     transform-origin: center;
     color: #3a5a40;
 }
 
 #user-info{
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 1.5em;
     margin-top: 5em;
     padding: 0 2em;
     font-size: 2em;
 }
 
-#user-info p{ 
-    padding-bottom: 2em;
+#user-info p:nth-of-type(even){
+    margin-right: 1em;
 }
 
-/* #profile-user-name{ */
-/* } */
+#user-info p{ 
+    padding-bottom: 2em;
+    white-space: nowrap;
+}
 
+
+.profile-metrics{
+    display: inline;
+    padding-left: 2em;
+    text-align: right;
+}
+
+.modify-container{
+    position: absolute;
+    margin-left: 1.5em;
+
+    padding: 1em;
+    transform: translateY(-1em);
+    border: 0;
+    background: transparent;
+    font-size: 1em;
+    
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+}
+
+
+.modify-container:hover{
+    background-color: #3a5a40;
+    color: white;
+}
+           
 #columns{
     display: flex;
     flex-direction: row;
@@ -494,4 +523,183 @@ footer a{
     width:40%;
     text-align: right;
     padding-right: 2em;
+}
+
+/* The code below here contains style relative to /public/explore.html */
+
+#explore-div{
+    background-color: #dad7cd;
+    padding: 8em 0 25em 0;
+}
+
+#filters-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 8em;
+}
+
+#search-coach{
+    font-family: "Sora", serif;
+    color: black;
+    font-weight: 500;
+    font-size: 1.1em;
+    padding: 1em 1em;
+    border: none;
+    outline: 5px solid  #3a5a40;
+    outline-offset: -10px;
+}
+
+#discipline-container{
+    position: relative;
+}
+
+#discipline-button{
+    text-wrap: nowrap;
+    font-family: 'Sora', serif;
+    text-transform: uppercase;
+    font-size: 1.2em;
+    font-weight: 500;
+    width: 12em;
+    height: 3em;
+    padding: 0 0.7em;
+    border: none;
+    outline: 5px solid  #3a5a40;
+    outline-offset: -10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow:ellipsis;
+}
+
+#discipline-list { 
+    margin-top: 0;
+    left: 0;
+    padding: 0;
+    right: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    position: absolute;
+    overflow: hidden;
+    list-style: none;
+    background-color: white;
+    font-family: "Sora", serif;
+}
+
+#discipline-list{
+    max-height: 10em;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#discipline-list li{
+    border-top: 1px solid black;
+    padding: 1em;
+}
+
+#discipline-list li:first-of-type{
+    border-top: none;
+    /* margin-top: 0; */
+    padding-top: 0.8em;
+}
+
+
+#discipline-list li:last-of-type{
+    padding-bottom: 1em;
+}
+
+#discipline-list li:hover{
+    background-color: #DCDCDC;
+}
+
+.hidden{
+    display:none;
+}
+
+.fa-caret-right svg{
+    display: inline-block;
+}
+
+.rotate-fa-caret-right svg{
+    transform: rotate(90deg);
+}
+
+#search-button-coaches{
+    font-family: "Sora", serif;
+    text-transform: uppercase;
+    font-size: 1.2em;
+    padding:  0 1em;
+    border: none;
+    outline: 5px solid  #3a5a40;
+    outline-offset: -10px;
+    text-wrap: nowrap;
+}
+
+.fa-magnifying-glass{
+    padding-left: 1em;
+}
+
+button{
+    background-color: white;
+}
+
+button:hover{
+    cursor: pointer;
+    background-color: #dbdbdb;
+}
+
+#triangle{
+    display: inline-block; /* Really important: makes the triangle rotate */
+    padding: 0;
+    margin: 0;
+    transition: transform 0.3s ease;
+}
+
+.triangle-trans{
+    transform: rotate(90deg);
+}
+
+#coaches-result{
+    margin-top: 16em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.coach-card{
+    display: inline;
+    font-family: "Sora", serif;
+    font-size: 2em;
+    display: flex;
+    justify-content: left;
+    width: 30em;
+    padding-top: 2em;
+}
+
+.coach-card a{
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 4px solid transparent;
+}
+
+.coach-card a:hover{
+    border-bottom: 4px solid black;
+}
+
+#more-coaches-div{
+    display: flex; 
+    justify-content: center;
+    margin-top: 2em;
+}
+
+#get-more-coaches{
+    font-size: 3em;
+    background-color: inherit;
+    font-weight: 300;
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+}
+
+#get-more-coaches:hover{
+    background-color: #b8b5ae;
 }
