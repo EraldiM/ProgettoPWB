@@ -539,7 +539,7 @@ footer a{
     gap: 8em;
 }
 
-#search-coach{
+#search-coach-name{
     font-family: "Sora", serif;
     color: black;
     font-weight: 500;
@@ -666,23 +666,42 @@ button:hover{
 }
 
 .coach-card{
-    display: inline;
     font-family: "Sora", serif;
     font-size: 2em;
+    width: min(30em, 100%);
+    min-width: 0;
     display: flex;
-    justify-content: left;
-    width: 30em;
+    justify-content: flex-start;
+    height: 7em;
     padding-top: 2em;
+    border-bottom: 1px solid black
 }
 
 .coach-card a{
     text-decoration: none;
+    position: relative;
+    height: fit-content;
+    display: inline-block;
     color: inherit;
-    border-bottom: 4px solid transparent;
+    white-space: nowrap;
 }
 
-.coach-card a:hover{
-    border-bottom: 4px solid black;
+
+.coach-card a::after{
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 100%;
+    height: 2px;
+    background-color: black;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+}
+
+.coach-card a:hover::after{
+    transform: scaleX(1);
 }
 
 #more-coaches-div{
@@ -698,6 +717,28 @@ button:hover{
     width: 2em;
     height: 2em;
     border-radius: 50%;
+}
+
+#discipline-tag-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: right;
+    gap: 1em;
+    width: 100%;
+    min-width: 0;
+    height: fit-content;
+}
+
+.discipline-tag{
+    background-color: #C0C0C0;
+    font-family: 'Sora', serif;
+    text-align: right;
+    font-size: 0.6em;
+    font-weight: 300;
+    padding: 0.40em 0.2em;
+    border-radius: 20px;
+    word-break:keep-all;
+    white-space: nowrap;
 }
 
 #get-more-coaches:hover{

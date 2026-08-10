@@ -1,17 +1,18 @@
 let last_coach_id;
 const discipline_list = document.getElementById("discipline-list");
+let tag_selected = false; // this variable represents the discipline that the user has selected, by the fault its value false, a state that represents all possible disciplines.
 
 window.addEventListener("load", async function(){
     const data = await fetch("/GET/disciplines");
 
     const res = await data.json();
-    console.log(res);
     res.forEach(ele=> {
         let discipline = document.createElement("li");
         discipline.textContent = ele.category_name;
         discipline.classList.add("discipline");
         discipline_list.appendChild(discipline);
     });
+
 });
 
 window.addEventListener("load", async function(){
@@ -20,6 +21,8 @@ window.addEventListener("load", async function(){
     const res = await data.json();
     const coach_div = document.getElementById("coaches-result");
     res.forEach(ele => {
+        let discipline_container = document.createElement("div");
+        discipline_container.id = "discipline-tag-container";
         name_last_name = document.createElement("a");
         name_last_name.href = "asdhnsfidjugbhn.html";
         coach_container = document.createElement("div");
@@ -27,9 +30,15 @@ window.addEventListener("load", async function(){
         coach_container.classList.add("coach-card");
         coach_div.appendChild(coach_container);
         coach_container.append(name_last_name);
+        ele.categories.forEach(category => {
+            categoryDOM = document.createElement("span");
+            categoryDOM.classList.add("discipline-tag");
+            categoryDOM.textContent = category;
+            discipline_container.appendChild(categoryDOM);
+        });
+        coach_container.appendChild(discipline_container);
     });
     last_coach_id = res[res.length - 1].id;
-    console.log(last_coach_id);
 });
 
 const icon = document.getElementById("triangle");
@@ -60,18 +69,27 @@ document.addEventListener("click", function(event){
 });
 
 document.getElementById("get-more-coaches").addEventListener("click", async function(){
-    console.log(last_coach_id);
-    let coach_id = new URLSearchParams({
-        coach_id: last_coach_id
+
+    let params = new URLSearchParams({
+        coach_id: last_coach_id,
+        discipline: tag_selected
     });
+    
     try {
-        const data = await fetch(`/GET/more-coaches?${coach_id}`, {
+        const data = await fetch(`/GET/more-coaches?${params}`, {
             method: "GET",
         }) 
+
         
         const res = await data.json();
+        if (res.length == 0){
+            alert("Non è stato trovato nessun altro coach!");
+            return;
+        }
         const coach_div = document.getElementById("coaches-result");
         res.forEach(ele => {
+            let discipline_container = document.createElement("div");
+            discipline_container.id = "discipline-tag-container";
             name_last_name = document.createElement("a");
             name_last_name.href = "asdhnsfidjugbhn.html";
             coach_container = document.createElement("div");
@@ -79,9 +97,68 @@ document.getElementById("get-more-coaches").addEventListener("click", async func
             coach_container.classList.add("coach-card");
             coach_div.appendChild(coach_container);
             coach_container.append(name_last_name);
+            ele.categories.forEach(category => {
+                categoryDOM = document.createElement("span");
+                categoryDOM.classList.add("discipline-tag");
+                categoryDOM.textContent = category;
+                discipline_container.appendChild(categoryDOM);
+            });
+        coach_container.appendChild(discipline_container);
         });
         last_coach_id = res[res.length - 1].id;
     } catch (error) {
         console.log("erroreeee: " + error);
+    }
+});
+
+document.getElementById("search-button-coaches").addEventListener("click", async function(){
+    let coach_name = document.getElementById("search-coach-name").value;
+    const old_tag = tag_selected;
+    tag_selected = document.getElementById("discipline-text").textContent;
+    if (tag_selected == "Disciplina"){
+        alert("Scegliere una disciplina.");
+        return;
+    }
+    const params = new URLSearchParams({
+        coach_name: coach_name,
+        discipline: tag_selected
+    });
+    try {
+        const data = await fetch(`/GET/filtered-coach?${params}`,{
+            method: 'GET'
+        });
+    
+        const res = await data.json();
+        console.log(res);
+        if (data.length == 0){
+            alert("Nessun risultato trovato.");
+            tag_selected = old_tag;
+            return;
+        }
+
+        const coach_div = document.getElementById("coaches-result");
+        coach_div.innerHTML = "";
+        res.forEach(ele => {
+            let discipline_container = document.createElement("div");
+            discipline_container.id = "discipline-tag-container";
+            name_last_name = document.createElement("a");
+            name_last_name.href = "asdhnsfidjugbhn.html";
+            coach_container = document.createElement("div");
+            name_last_name.textContent = ele.name + " " + ele.last_name;
+            coach_container.classList.add("coach-card");
+            coach_div.appendChild(coach_container);
+            coach_container.append(name_last_name);
+            ele.categories.forEach(category => {
+                categoryDOM = document.createElement("span");
+                categoryDOM.classList.add("discipline-tag");
+                categoryDOM.textContent = category;
+                discipline_container.appendChild(categoryDOM);
+            });
+        coach_container.appendChild(discipline_container);
+        });
+        last_coach_id = res[res.length - 1].id;
+         
+    } catch (error) {
+
     }
 });
