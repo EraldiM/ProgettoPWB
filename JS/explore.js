@@ -1,6 +1,47 @@
 let last_coach_id;
 const discipline_list = document.getElementById("discipline-list");
 let tag_selected = false; // this variable represents the discipline that the user has selected, by the fault its value false, a state that represents all possible disciplines.
+const notFound = document.querySelector(".not-found");
+
+function createPopup(){
+    let popupDiv = document.createElement("div");
+    popupDiv.classList.add("pop-up");
+    popupDiv.classList.add("hidden2");
+    return popupDiv;
+}
+
+function removePopup(popUp){
+    popUp.remove();
+}
+
+function setPopUp(titleText, paragraphText, containerToAppend){
+    let popUp = createPopup();
+    let title = document.createElement("h1");
+    title.textContent = titleText;
+    let paragraph = document.createElement("p");
+    paragraph.textContent = paragraphText;
+    popUp.appendChild(title);
+    popUp.appendChild(paragraph);
+    containerToAppend.insertBefore(popUp, containerToAppend.firstChild);
+    popUp.offsetHeight;
+    popUp.classList.remove("hidden2");
+    popUp.addEventListener("transitionend", (event)=>{
+        if (event.propertyName=== "opacity"){
+            popUp.classList.add("line");
+        }
+    }), {once: true};
+    popUp.addEventListener("animationend", (event)=>{
+        if(event.animationName == "expandLine"){
+            popUp.classList.add("hidden2");
+        }
+        popUp.addEventListener("transitionend", (event)=>{
+            if (event.propertyName=== "opacity"){
+                popUp.remove();
+            }
+        }), {once: true};
+    });
+
+}
 
 window.addEventListener("load", async function(){
     const data = await fetch("/GET/disciplines");
@@ -83,7 +124,9 @@ document.getElementById("get-more-coaches").addEventListener("click", async func
         
         const res = await data.json();
         if (res.length == 0){
-            alert("Non è stato trovato nessun altro coach!");
+            let title = "Nessun altro coach è stato trovato";
+            let description = "" ;
+            setPopUp(title, description, document.getElementById("more-coaches-div"));
             return;
         }
         const coach_div = document.getElementById("coaches-result");
@@ -129,9 +172,12 @@ document.getElementById("search-button-coaches").addEventListener("click", async
         });
     
         const res = await data.json();
-        console.log(res);
-        if (data.length == 0){
-            alert("Nessun risultato trovato.");
+        // console.log(data.length);
+        if (res.length == 0){
+        console.log(res.length);
+            let titolo = "Nessun coach trovato.";
+            let descrizione = "Provare un altro nome o un altra disciplina."
+            setPopUp(titolo, descrizione, document.getElementById("explore-div"));
             tag_selected = old_tag;
             return;
         }
