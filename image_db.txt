@@ -1,0 +1,9 @@
+CREATE TABLE images(
+    image_id INT PRIMARY KEY AUTO_INCREMENT,
+    owner_type ENUM("coach", "user"),
+    owner_id INT NOT NULL,
+    image_type ENUM("profile", "gallery"),
+    file_path VARCHAR(255) NOT NULL,
+    original_name VARCHAR(100) NOT NULL,
+    uploaded_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
+);

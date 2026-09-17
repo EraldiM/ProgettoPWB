@@ -58,6 +58,76 @@ app.get("/public/signup.html", redirectIfAuthenticated, (req,res) => {res.sendFi
 app.use('/public', express.static(__dirname + "/public"));
 app.use('/private', authenticateToken, express.static(__dirname + "/private"));
 
+app.get('/public/coach/html', async (req, res) => {
+    res.sendFile(__dirname + '/public/coach.html');
+    const coach_id = req.query.coach_id;
+    console.log(req.query);
+    const query = `SELECT
+    coaches.id,
+    coaches.name,
+    coaches.last_name,
+    coaches.sex,
+    JSON_ARRAYAGG(
+        coaches_categories.category_name
+        ORDER BY coaches_categories.category_name
+    ) AS categories
+    FROM coaches
+    INNER JOIN coaches_categories
+        ON coaches.id = coaches_categories.id_coach
+    WHERE coaches.id = ?
+    GROUP BY
+        coaches.id,
+        coaches.name,
+        coaches.last_name,
+        coaches.sex
+    ORDER BY coaches.id;`
+
+    try {
+        const row = await pool.promise().execute(query, [coach_id]);
+        const coach = row[0];
+
+        console.log(coach);
+        res.json(coach);
+
+    } catch (error) {
+        console.log("Errore zio can: " + error);
+    }
+});
+
+app.get("/GET/coach-info", async (req, res) =>{
+    const coach_id = req.query.coach_id;
+    const query = `SELECT
+    coaches.id,
+    coaches.name,
+    coaches.last_name,
+    coaches.sex,
+    JSON_ARRAYAGG(
+        coaches_categories.category_name
+        ORDER BY coaches_categories.category_name
+    ) AS categories
+    FROM coaches
+    INNER JOIN coaches_categories
+        ON coaches.id = coaches_categories.id_coach
+    WHERE coaches.id = ?
+    GROUP BY
+        coaches.id,
+        coaches.name,
+        coaches.last_name,
+        coaches.sex
+    ORDER BY coaches.id;`
+
+    try {
+        const row = await pool.promise().execute(query, [coach_id]);
+        const coach = row[0];
+
+        console.log(coach);
+        res.json(coach);
+
+    } catch (error) {
+        console.log("Errore zio can: " + error);
+    }
+});
+
 // login handling
 app.post("/login", async (req, res) =>{
     const {username, password} = req.body;
@@ -347,6 +417,10 @@ app.get("/GET/filtered-coach", async (req, res) => {
         console.log("errore del DB: " + error);
         res.json(error);
     }
+});
+
+app.use((req, res) => {
+    res.status(404).sendFile(__dirname + '/public/404.html');
 });
 
 app.listen(port, () => {

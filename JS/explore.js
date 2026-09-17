@@ -45,8 +45,10 @@ function setPopUp(titleText, paragraphText, containerToAppend){
 
 window.addEventListener("load", async function(){
     const data = await fetch("/GET/disciplines");
+    console.log("ciao");
 
     const res = await data.json();
+    
     res.forEach(ele=> {
         let discipline = document.createElement("li");
         discipline.textContent = ele.category_name;
@@ -65,7 +67,11 @@ window.addEventListener("load", async function(){
         let discipline_container = document.createElement("div");
         discipline_container.id = "discipline-tag-container";
         name_last_name = document.createElement("a");
-        name_last_name.href = "asdhnsfidjugbhn.html";
+        const param = new URLSearchParams({
+            coach_id: ele.id
+        });
+        console.log(param);
+        name_last_name.href = `/public/coach.html?${param}`;
         coach_container = document.createElement("div");
         name_last_name.textContent = ele.name + " " + ele.last_name;
         coach_container.classList.add("coach-card");
@@ -134,7 +140,11 @@ document.getElementById("get-more-coaches").addEventListener("click", async func
             let discipline_container = document.createElement("div");
             discipline_container.id = "discipline-tag-container";
             name_last_name = document.createElement("a");
-            name_last_name.href = "asdhnsfidjugbhn.html";
+            const param = new URLSearchParams({
+                coach_id: ele.id
+            });
+            console.log(param);
+            name_last_name.href = `/public/coach.html?${param}`;
             coach_container = document.createElement("div");
             name_last_name.textContent = ele.name + " " + ele.last_name;
             coach_container.classList.add("coach-card");
@@ -188,7 +198,11 @@ document.getElementById("search-button-coaches").addEventListener("click", async
             let discipline_container = document.createElement("div");
             discipline_container.id = "discipline-tag-container";
             name_last_name = document.createElement("a");
-            name_last_name.href = "asdhnsfidjugbhn.html";
+            const param = new URLSearchParams({
+                coach_id: ele.id
+            });
+            console.log(param);
+            name_last_name.href = `/public/coach.html?${param}`;
             coach_container = document.createElement("div");
             name_last_name.textContent = ele.name + " " + ele.last_name;
             coach_container.classList.add("coach-card");
