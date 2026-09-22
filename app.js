@@ -100,6 +100,8 @@ app.get("/GET/coach-info", async (req, res) =>{
     coaches.id,
     coaches.name,
     coaches.last_name,
+    coaches.phone,
+    coaches.email,
     coaches.sex,
     JSON_ARRAYAGG(
         coaches_categories.category_name

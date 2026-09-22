@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Sora:wght@100..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
 
 body{
     padding: 0;
@@ -711,12 +712,14 @@ button:hover{
 }
 
 #get-more-coaches{
+    margin-top: 1em;
     font-size: 3em;
-    background-color: inherit;
+    background-color: white;
     font-weight: 300;
     width: 2em;
     height: 2em;
-    border-radius: 50%;
+    box-shadow: 0px 0px 19px 9px rgba(0, 0, 0, 0.43);
+    -webkit-box-shadow: 0px 0px 19px 9px rgba(0, 0, 0, 0.43);  border-radius: 50%;
 }
 
 #discipline-tag-container{
@@ -809,17 +812,94 @@ button:hover{
 
 #main-div-coach{
     background-color: #dad7cd; 
+    font-family: 'Manrope', sans-serif;
     display: flex;
-    flex-direction: row;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 #coach-card-div{
+    margin-top: 5em;
+    background-color: white;
     text-align: center;
-    margin-top: 3em;
     margin-bottom: 3em;
     outline: 3px solid #344e41;
     outline-offset: -10px;
-    width: 40em;box-shadow: 0px 0px 37px 6px rgba(0, 0, 0, 0.85);
+    width: 55em;
+    box-shadow: 0px 0px 37px 6px rgba(0, 0, 0, 0.85);
     -webkit-box-shadow: 0px 0px 37px 6px rgba(0, 0, 0, 0.85);
+}
+
+#coach-card-div h1{
+    padding: 0 2em; 
+}
+
+.button-3{
+    font-size: 1.8em;
+    margin-bottom: 2em;
+    appearance: none;
+    background-color: #344e41;
+    border: 1px solid rgba(27, 31, 35, .15);
+    border-radius: 6px;
+    box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+    font-weight: 600;
+    line-height: 20px;
+    padding: 0.8em 16px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.button-3:focus:not(:focus-visible):not(.focus-visible) {
+    box-shadow: none;
+    outline: none;
+}
+
+.button-3:hover {
+    background-color: #3a5a40;
+}
+
+.button-3:focus {
+    box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
+    outline: none;
+}
+
+.button-3:disabled {
+    background-color: #94d3a2;
+    border-color: rgba(27, 31, 35, .1);
+    color: rgba(255, 255, 255, .8);
+    cursor: default;
+}
+
+.button-3:active {
+    background-color: #298e46;
+    box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
+}
+
+.coach-p{
+    font-size: 1.8em;
+    font-weight: 400;
+    display: flex;
+    justify-content: space-between;
+    padding: 1em 2em;
+}
+
+#coach-disciplines-div ul{
+    margin: 0;
+}
+
+
+#coach-disciplines-div ul li{
+    padding-bottom: 0.8em;
+    list-style-position: inside;
 }
