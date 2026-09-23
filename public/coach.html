@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Cooach Page</title>
     <link href="../style/style.css" rel="stylesheet">
-    <script src="../JS/coach.js"></script>
+    <script src="../JS/coach.js" defer></script>
     <script src="https://kit.fontawesome.com/f6a32bf7bc.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -21,8 +21,22 @@
     <div id="main-div-coach">
         <div id="coach-card-div">
         </div> 
+        <div id="overlay" class="hidden"></div>
+        <div id="book-div" class="hidden">
+            <p id="close-booking" ><i class="fas fa-times" ></i></p>
+            <div class="week">
+                <i class="fas fa-long-arrow-alt-left" id="booking-left-arrow"></i>
+                <span id="booking-week"></span>
+                <i class="fas fa-long-arrow-alt-right" id="booking-right-arrow"></i>
+            </div>
+            <div class="days">
+                <h1 id="booking-day-selector">Seleziona il giorno:</h1>
+                <input type="radio" name="giorno" value="lunedi"> 
+                <label for="lunedi">Lun</label>
+            </div>
+        </div>
         <div id="coach-button-div">
-            <button type="" class="button-3">Prenota la visita</button> 
+            <button type="" class="button-3" id="book-button">Prenota la visita</button> 
         </div>
     </div>
     <footer>

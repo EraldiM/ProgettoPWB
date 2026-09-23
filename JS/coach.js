@@ -40,7 +40,6 @@ window.addEventListener("load", async function(){
         let disciplines_p = document.createElement("span");
         let disciplines_coach_ul = document.createElement("ul");
         disciplines_p.textContent = "Di cosa mi occupo:"
-        console.log(coach.categories.length);
         coach.categories.forEach((element) => {
             let discipline = document.createElement("li");
             discipline.textContent = element;
@@ -73,4 +72,54 @@ window.addEventListener("load", async function(){
        console.log("Errore:", error);
     }
     }
+
+
+});
+
+function sumDays(ogDate, days){
+    const date = new Date(ogDate);
+    date.setDate(date.getDate() + days);
+    return date.toLocaleDateString("it-IT").replaceAll("/", "-");
+}
+
+function formattedweek(start, finish) {
+
+    const dataInizio = new Date(`${start}T00:00:00`);
+    const dataFine = new Date(`${finish}T00:00:00`);
+
+    const giornoInizio = dataInizio.getDate();
+
+    const fineFormattata = dataFine.toLocaleDateString("it-IT", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+    });
+
+    return `${giornoInizio}–${fineFormattata}`;
+}
+
+const titolo = formattedweek("2026-09-21", "2026-09-27");
+
+console.log(titolo);
+
+document.getElementById("book-button").addEventListener("click", async function(){
+    let overlay = document.getElementById("overlay");
+    overlay.classList.remove("hidden")
+    let book_div = document.getElementById("book-div")
+    book_div.classList.remove("hidden")
+
+    let date = new Date();
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let date2 = new Date(year, month - 1, day);
+    let start_date = date2.toLocaleDateString("it-IT").split("/").reverse().join("-");
+    console.log(start_date);
+    let end_date = sumDays(date2, 10).split("-").reverse().join("-");
+
+    let formatted_text = formattedweek(start_date, end_date);
+
+    let text_week = document.getElementById("booking-week");
+    text_week.textContent = formatted_text;
+
 });

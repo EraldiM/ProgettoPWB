@@ -804,6 +804,10 @@ button:hover{
     }
 }
 
+hidden{
+    display: none;
+}
+
 .hidden2{
     opacity: 0;
 }
@@ -902,4 +906,58 @@ button:hover{
 #coach-disciplines-div ul li{
     padding-bottom: 0.8em;
     list-style-position: inside;
+}
+
+/* booking part */
+
+#overlay{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    inset: 0;
+    z-index: 11;
+    opacity: 0.33;
+    filter: blur(10px);
+    background-color: black;
+}
+
+#book-div{
+    z-index: 12;
+    position: absolute;
+    margin-top: 10em;
+    width: 70em;
+    height: 50em;
+    background-color: white;
+    border-radius: 3em;
+    /* border: 1px solid #344e41; */
+box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+
+}
+
+#close-booking{
+    text-align: right;
+    cursor: pointer;
+    font-size: 2em;
+    margin-top: 1em;
+    margin-right: 1.5em;
+}
+
+.week{
+    text-align: center;
+}
+
+#booking-week{
+    padding: 0 1em;
+    font-size: 2em;
+    font-weight: 400;
+}
+
+#booking-day-selector{
+    text-align: center;
+    font-weight: 500;
+}
+
+#booking-left-arrow, #booking-right-arrow{
+    font-size: 1.5em;
+    cursor: pointer;
 }

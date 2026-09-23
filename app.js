@@ -58,7 +58,7 @@ app.get("/public/signup.html", redirectIfAuthenticated, (req,res) => {res.sendFi
 app.use('/public', express.static(__dirname + "/public"));
 app.use('/private', authenticateToken, express.static(__dirname + "/private"));
 
-app.get('/public/coach/html', async (req, res) => {
+app.get('/public/coach.html', async (req, res) => {
     res.sendFile(__dirname + '/public/coach.html');
     const coach_id = req.query.coach_id;
     console.log(req.query);
