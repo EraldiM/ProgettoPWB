@@ -23,16 +23,51 @@
         </div> 
         <div id="overlay" class="hidden"></div>
         <div id="book-div" class="hidden">
-            <p id="close-booking" ><i class="fas fa-times" ></i></p>
+            <p id="close-booking-p" > <span id="close-booking-s"><i class="fas fa-times" ></i></span></p>
             <div class="week">
-                <i class="fas fa-long-arrow-alt-left" id="booking-left-arrow"></i>
+                <span id="booking-left-arrow"><i class="fas fa-long-arrow-alt-left"></i></span>
                 <span id="booking-week"></span>
-                <i class="fas fa-long-arrow-alt-right" id="booking-right-arrow"></i>
+                <span id="booking-right-arrow"><i class="fas fa-long-arrow-alt-right"></i></span>
             </div>
+            <h1 id="booking-day-selector">Seleziona il giorno:</h1>
             <div class="days">
-                <h1 id="booking-day-selector">Seleziona il giorno:</h1>
-                <input type="radio" name="giorno" value="lunedi"> 
-                <label for="lunedi">Lun</label>
+                <span class="hidden" data-day="1">
+                    <input type="radio" id="lunedi" name="day" value="1">
+                    <label for="lunedi">Lunedì</label>
+                </span>
+
+                <span class="hidden" data-day="2">
+                    <input type="radio" id="martedi" name="day" value="2">
+                    <label for="martedi">Martedì</label>
+                </span>
+
+                <span class="hidden" data-day="3">
+                    <input type="radio" id="mercoledi" name="day" value="3">
+                    <label for="mercoledi">Mercoledì</label>
+                </span>
+
+                <span class="hidden" data-day="4">
+                    <input type="radio" id="giovedi" name="day" value="4">
+                    <label for="giovedi"> Giovedì</label>
+                </span>
+
+                <span class="hidden" data-day="5">
+                    <input type="radio" id="venerdi" name="day" value="5">
+                    <label for="venerdi"> Venerdì</label>
+                </span>
+
+                <span class="hidden" data-day="6">
+                    <input type="radio" id="sabato" name="day" value="6">
+                    <label for="sabato">Sabato</label>
+                </span>
+
+                <span class="hidden" data-day="7">
+                    <input type="radio" id="domenica" name="day" value="7">
+                    <label for="domenica">Domenica</label>
+                </span>
+            </div>
+            <h1>Seleziona l'orario per l'incontro</h1>
+            <div class="time-slot-div">
             </div>
         </div>
         <div id="coach-button-div">

@@ -130,6 +130,21 @@ app.get("/GET/coach-info", async (req, res) =>{
     }
 });
 
+app.get("/GET/coach-dates", async (req, res)=>{
+    const coach_id = req.query.coach_id;
+
+    const query = `SELECT DISTINCT day_of_week, start_time, end_time FROM coach_working_hours WHERE coach_id = ? ORDER BY day_of_week;`
+    try {
+        const row = await pool.promise().execute(query, [coach_id]);
+        const days = row[0];
+
+        res.json(days);
+         
+    } catch (error) {
+        console.log("Errore: ", error);
+    }
+});
+
 // login handling
 app.post("/login", async (req, res) =>{
     const {username, password} = req.body;
