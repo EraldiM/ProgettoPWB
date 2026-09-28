@@ -7,7 +7,6 @@ document.getElementById("signup").addEventListener("click", async function(event
     const last_name = document.getElementById("last_name").value;
     const sex = parseInt(document.getElementById("sex-select").value);
     const birth_date = document.getElementById("birth_date").value;
-    console.log(typeof (birth_date));
     const soloLettere = /^\p{L}+$/u; // Regex (regular expression) that checks if name and last_name contains only valid characters for a "real" name.
     
     // starting to check various parameters for the user fields.

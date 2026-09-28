@@ -235,7 +235,7 @@ app.get("/GET/profile", async(req, res) => {
 
         try {
             const righe = await pool.promise().execute(query, [id]);
-            const user = righe[0];
+            const user = righe[         0];
 
             res.json(user);
 
@@ -249,6 +249,33 @@ app.get("/GET/profile", async(req, res) => {
     }
 
 });
+
+// update username
+app.patch("/user-name", authenticateToken,async(req , res)=>{
+    const username = req.body.user_name;
+    const id = req.user.userID;
+
+    const query = `UPDATE utenti3 SET utenti3.user_name = ? WHERE utenti3.id = ?;`    
+
+    try {
+        const row = await pool.promise().execute(query, [username, id]);
+
+        return res.status(200).json({
+            message: "Nome utente aggiornato con successo"
+        });
+
+    } catch (error) {
+        // console.log("Errore: ", error);
+        if (error.code === "ER_DUP_ENTRY"){
+            return res.status(409).json({
+                error : "Username già in utilizzo"
+            })
+        }
+        return res.status(500).json({error: "Errore durante l'aggiornamento"});
+    }
+})
+
+
 
 app.get("/GET/coach-list", async (req, res) =>{
     const query = `SELECT

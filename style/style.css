@@ -432,13 +432,13 @@ footer a{
 
 #card-profile{
     flex:  0 0 60% ;
-    width: 60em;
+    width: 62em;
     margin: 0;
     padding-bottom: 3em;
-    border: 1px solid #3a5a40;
     border-radius: 50px;
     overflow: hidden;
     margin-bottom: 5em;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
 }
 
 #card-profile p{
@@ -491,7 +491,6 @@ footer a{
 
 .profile-metrics{
     display: inline;
-    padding-left: 2em;
     text-align: right;
 }
 
@@ -520,10 +519,45 @@ footer a{
     display: flex;
     flex-direction: row;
 }
+
 #col1{
     width:40%;
     text-align: right;
     padding-right: 2em;
+}
+
+#change-name-input{
+    border-radius: 15px;
+    font-size: 0.7em;
+    padding: 0.3em 0.1em;
+    border: none;
+    outline: 2px solid #ccc;
+}
+
+#change-name-input:focus{
+    outline: 2px solid #3a5a40;
+}
+
+#submit-change-name-button{
+    font-size: 1em;
+    position: absolute;
+    margin-left: 1em;
+    transform: translateY(-15%); 
+}
+
+.user-name-p{
+    display:inline-flex;
+    flex-direction: column
+}
+
+#change-name-error{
+    padding-top: 0.7em;
+    max-width: 15em;
+    white-space: normal;
+    position: absolute;
+    display: block;
+    color: red;
+    font-size: 0.7em;
 }
 
 /* The code below here contains style relative to /public/explore.html */
@@ -838,8 +872,12 @@ hidden{
     padding: 0 2em; 
 }
 
-.button-3{
+.booking-button{
     font-size: 1.8em;
+    display: inline-block;
+}
+
+.button-3{
     margin-bottom: 2em;
     appearance: none;
     background-color: #344e41;
@@ -849,7 +887,6 @@ hidden{
     box-sizing: border-box;
     color: #fff;
     cursor: pointer;
-    display: inline-block;
     font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
     font-weight: 600;
     line-height: 20px;
@@ -1010,3 +1047,5 @@ hidden{
     outline: 2px solid #000;
     outline-offset: 2px;
 }
+
+

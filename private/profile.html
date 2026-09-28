@@ -27,8 +27,17 @@
                 <i class="fas fa-user" id="profile-pic"></i>
             </div> 
             <div id="user-info">
-                <p class="profile-metrics">Nome utente:</p><p id="profile-user-name"></p>
-                <p class="profile-metrics">Nome:</p> <p id="profile-name"></p>
+                <p class="profile-metrics">Nome utente:</p>
+                <div style="display: inline;">
+                    <p>
+                        <span id="profile-user-name"></span>
+                        <button id="change-name" class="modify-container"><i class="fa-solid fa-pencil"></i></button>
+                        <button class="button-3" id="submit-change-name-button" hidden>
+                            Salva
+                        </button>
+                    </p>
+                </div>
+                <p class="profile-metrics">Nome:</p><p id="profile-name"></p>
                 <p class="profile-metrics">Cognome:</p> <p id="profile-last-name"></p>
                 <p class="profile-metrics">Età:</p> <p id="profile-age"></p>
                 <p class="profile-metrics">Sesso:</p> <p id="profile-sex"></p>
