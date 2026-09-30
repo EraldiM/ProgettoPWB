@@ -838,9 +838,6 @@ button:hover{
     }
 }
 
-hidden{
-    display: none;
-}
 
 .hidden2{
     opacity: 0;
@@ -943,6 +940,35 @@ hidden{
 #coach-disciplines-div ul li{
     padding-bottom: 0.8em;
     list-style-position: inside;
+}
+
+#book-button{
+    font-size: 1.5em;
+}
+
+#date-book-button-div{
+    display: flex;
+    justify-content: center;
+}
+
+#date-book-button{
+    margin-top: 3em;
+    transition: opacity 0.4s;
+    font-size: 1.8em; 
+}
+
+#booking-response-div{
+    display:flex;
+    justify-content: center;
+
+}
+
+#booking-response-div p{
+    position: absolute;
+    color: #344e41;
+    font-weight: 600;
+    font-size: 1.5em;
+
 }
 
 /* booking part */

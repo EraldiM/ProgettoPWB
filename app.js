@@ -34,6 +34,24 @@ function authenticateToken(req, res, next){
     }
 }
 
+function authenticateToken(req, res, next){
+    const token = req.cookies.token;
+    if (!token){ // if the user is not authenitcated we redirect him on the login page
+        return res.status(401).json({
+            error: "Utente non autenticato"
+        })
+    }
+    try {
+        const payload = jwt.verify(token, JWT_SECRET);
+        req.user = payload;
+        next();
+    } catch (error) {
+        return res.status(401).json({
+            error: "Token non valido o scaduto"
+        });
+    }
+}
+
 function redirectIfAuthenticated(req, res, next){
     const token = req.cookies.token;
 
@@ -131,17 +149,58 @@ app.get("/GET/coach-info", async (req, res) =>{
 });
 
 app.get("/GET/coach-dates", async (req, res)=>{
-    const coach_id = req.query.coach_id;
+    const {coach_id, start_date, end_date} = req.query;
+    console.log("coach id:", coach_id);
+    console.log(start_date);
+    console.log(end_date);
 
     const query = `SELECT DISTINCT day_of_week, start_time, end_time FROM coach_working_hours WHERE coach_id = ? ORDER BY day_of_week;`
+    const query2 = `SELECT * FROM bookings
+        WHERE coach_id = ?
+        AND status IN ('confirmed', 'pending')
+        AND start_at < ?
+        AND end_at > ?; `
     try {
-        const row = await pool.promise().execute(query, [coach_id]);
-        const days = row[0];
+        const [schedule] = await pool.promise().execute(query, [coach_id]);
+        const [booking] = await pool.promise().execute(query2, [coach_id, end_date, start_date]);
 
-        res.json(days);
+        res.json({
+            schedule,
+            booking 
+        });
          
     } catch (error) {
         console.log("Errore: ", error);
+    }
+});
+
+//Handing the booking route
+app.post("/booking", authenticateToken, async (req, res) =>{
+    const {coach_id, start_time, end_time} = req.body;
+    const user_id = req.user.userID;
+
+    const query = `INSERT INTO bookings (coach_id, user_id, start_at, end_at) VALUES (?, ?, ?, ?);`
+    const query2 = `SELECT id FROM bookings WHERE coach_id = ? AND status IN ('pending', 'confirmed') AND start_at < ? AND end_at > ? LIMIT 1;`
+
+    try {
+        const [dup]= await pool.promise().execute(query2, [coach_id, end_time, start_time]);
+        console.log(dup);
+        if (dup.length > 0) {
+            return res.status(409).json({
+                error: "È già presente una prenotazione allo stesso orario"
+            })
+        }
+
+
+        const row = await pool.promise().execute(query, [coach_id, user_id, start_time, end_time]);
+
+        return res.status(201).json({
+            success: "Prenotazione eseguita con successo",
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error: error.message});
     }
 });
 
@@ -274,8 +333,6 @@ app.patch("/user-name", authenticateToken,async(req , res)=>{
         return res.status(500).json({error: "Errore durante l'aggiornamento"});
     }
 })
-
-
 
 app.get("/GET/coach-list", async (req, res) =>{
     const query = `SELECT
