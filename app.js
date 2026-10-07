@@ -10,6 +10,7 @@ const port = 3000;
 
 const JWT_SECRET = "0123456789";
 
+// connecting to the DB
 const pool = mysql.createPool({
     host: "localhost",
     user: "eraldi",
@@ -20,6 +21,9 @@ const pool = mysql.createPool({
 });
 
 // adding the authentication
+// This function provides an authenitcation method checking the token (if present) provided by the client 
+// and if the Token if invalid we redirect him on the login page.
+// The redirect can only be performed on action like, trying to visit profile page while not authenticated.
 function authenticateToken(req, res, next){
     const token = req.cookies.token;
     if (!token){ // if the user is not authenitcated we redirect him on the login page
@@ -34,24 +38,27 @@ function authenticateToken(req, res, next){
     }
 }
 
-function authenticateToken(req, res, next){
-    const token = req.cookies.token;
-    if (!token){ // if the user is not authenitcated we redirect him on the login page
-        return res.status(401).json({
-            error: "Utente non autenticato"
-        })
-    }
-    try {
-        const payload = jwt.verify(token, JWT_SECRET);
-        req.user = payload;
-        next();
-    } catch (error) {
-        return res.status(401).json({
-            error: "Token non valido o scaduto"
-        });
-    }
-}
+// function authenticateToken(req, res, next){
+//     const token = req.cookies.token;
+//     if (!token){ // if the user is not authenitcated we redirect him on the login page
+//         return res.status(401).json({
+//             error: "Utente non autenticato"
+//         })
+//     }
+//     try {
+//         const payload = jwt.verify(token, JWT_SECRET);
+//         req.user = payload;
+//         next();
+//     } catch (error) {
+//         return res.status(401).json({
+//             error: "Token non valido o scaduto"
+//         });
+//     }
+// }
 
+
+// This function checks user's token to see if he is logged, if the token is valid
+// while perfroming certain action like tring to visit login or sing in page we redirect him on his profile page.
 function redirectIfAuthenticated(req, res, next){
     const token = req.cookies.token;
 
@@ -520,9 +527,7 @@ app.get("/GET/filtered-coach", async (req, res) => {
     }
 });
 
-app.use((req, res) => {
-    res.status(404).sendFile(__dirname + '/public/404.html');
-});
+app.use((req, res) => { res.status(404).sendFile(__dirname + '/public/404.html'); });
 
 app.listen(port, () => {
     console.log(`Server in ascolto su http://localhost:${port}/public/index.html`);

@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title description">
+  <title id="title">Coach e atleta</title>
+  <desc id="description">Un coach con cappellino e scheda di allenamento guida un atleta che solleva un manubrio. Una curva diagonale divide le due figure.</desc>
+  <defs>
+    <clipPath id="tile">
+      <rect width="512" height="512" rx="112"/>
+    </clipPath>
+  </defs>
+
+  <!-- La separazione segue lo spazio libero tra le due sagome. -->
+  <g clip-path="url(#tile)">
+    <rect width="512" height="512" fill="#3a5a40"/>
+    <path d="M347 0C342 150 282 245 245 326S192 463 188 512H512V0Z" fill="#304d38"/>
+  </g>
+
+  <!-- Coach: cappellino, profilo e gesto della mano. -->
+  <g fill="#fff">
+    <path d="M109 123C111 101 127 84 150 85C173 86 190 99 194 120C168 113 137 113 109 123Z"/>
+    <path d="M108 131C138 119 177 120 203 131C209 134 210 138 203 141C189 145 174 137 157 137C138 136 121 143 110 141C105 140 104 134 108 131Z"/>
+    <path d="M121 150C140 144 166 143 183 149C184 158 184 164 190 170L199 179C202 182 200 185 195 187L187 189C188 202 180 210 168 213L169 227C162 239 144 237 132 226L137 206C123 198 117 185 118 170Z"/>
+    <path d="M124 236C103 236 86 250 80 273C73 300 74 343 83 373C115 390 164 396 204 387L221 315C214 298 203 282 189 267C192 279 201 291 212 298C223 305 233 301 240 292C249 280 253 264 258 249L269 225C272 219 266 215 262 220L254 235L257 217C258 210 251 207 248 214L240 235C234 248 229 260 223 272C213 260 208 247 194 242C187 239 180 239 175 236C162 251 138 251 124 236Z"/>
+  </g>
+  <g fill="none" stroke="#3a5a40" stroke-linecap="round">
+    <path d="M130 165C137 159 143 165 141 173" stroke-width="5"/>
+    <path d="M121 256C127 272 143 280 157 281" stroke-width="7"/>
+    <path d="M94 288C87 313 90 332 107 344C121 353 141 354 156 355" stroke-width="8"/>
+  </g>
+  <circle cx="176" cy="162" r="2.8" fill="#3a5a40"/>
+
+  <!-- La scheda resta distinta dal braccio e dal busto. -->
+  <g transform="rotate(-12 151 321)">
+    <rect x="125" y="284" width="54" height="77" rx="9" fill="#3a5a40" stroke="#fff" stroke-width="5"/>
+    <rect x="139" y="279" width="26" height="13" rx="5" fill="#fff"/>
+    <path d="M138 308H164M138 321H159M138 334H153" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <!-- Atleta: profilo, spalle e braccio flesso con manubrio. -->
+  <g fill="#fff">
+    <path d="M342 197C353 184 373 184 386 194C399 204 401 220 396 236C394 245 388 253 381 258L383 276C371 286 350 283 339 271L346 252C335 251 328 244 330 233L323 228C319 225 320 221 324 216L331 207C334 203 338 200 342 197Z"/>
+    <path d="M341 281C331 281 321 286 313 296C296 315 280 341 270 363C265 375 271 384 279 381C287 379 290 370 295 362L315 331C309 356 302 387 295 411C331 429 376 433 416 420C413 394 409 369 407 350L404 315C421 307 439 291 450 274C456 265 457 254 453 243L438 194C436 187 428 187 424 193C421 198 424 206 426 214L433 251C434 258 427 265 420 270L394 290C384 282 374 279 363 281C356 284 348 285 341 281Z"/>
+    <path d="M420 160C416 160 413 164 414 169L419 190C421 198 426 202 432 199L437 194C441 191 439 186 435 181L430 166C428 162 424 159 420 160Z"/>
+  </g>
+  <g fill="#304d38">
+    <path d="M343 288C355 301 369 303 383 289L386 300C372 316 351 311 337 299Z"/>
+  </g>
+  <g fill="none" stroke="#304d38" stroke-linecap="round">
+    <path d="M345 202C357 208 369 207 379 202C381 210 385 215 391 219" stroke-width="6"/>
+    <path d="M380 227C372 222 368 229 371 235" stroke-width="5"/>
+    <path d="M419 176C422 173 426 173 429 176" stroke-width="3.5"/>
+    <path d="M327 317C336 331 354 338 370 334" stroke-width="7"/>
+    <path d="M394 302C400 316 399 331 395 339" stroke-width="7"/>
+    <path d="M316 386C337 394 362 397 385 391" stroke-width="6"/>
+  </g>
+  <circle cx="336" cy="218" r="2.8" fill="#304d38"/>
+
+  <!-- I pesi restano distanti dalla testa e dalla spalla. -->
+  <g transform="rotate(-15 421 164)" fill="#fff">
+    <rect x="393" y="160" width="57" height="9" rx="4.5"/>
+    <rect x="390" y="145" width="13" height="39" rx="5"/>
+    <rect x="440" y="145" width="13" height="39" rx="5"/>
+    <rect x="381" y="153" width="7" height="23" rx="3.5"/>
+    <rect x="455" y="153" width="7" height="23" rx="3.5"/>
+  </g>
+</svg>

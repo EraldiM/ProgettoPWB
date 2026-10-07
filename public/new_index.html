@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Home page</title>
+        <link href="../style/new_style.css" rel="stylesheet">
+        <script src="../JS/index.js" defer></script>
+        <script src="https://kit.fontawesome.com/f6a32bf7bc.js" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../JS/mapdata.js"></script>
+        <script type="text/javascript" src="../JS/countrymap.formatted.js"></script>
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+                <li><a href="/public/new_index.html">Home</a></li>
+                <li><a href="/public/explore.html">Esplora</a></li>
+                <li><a href="/public/new_index.html">Chi siamo</a></li>
+                <li id="profile"><a href="../private/profile.html"><i class="fas fa-user"></i></a>
+                </li>
+            </ul> 
+            <div id="icon-sub-menu" class="hidden">
+                <nav class="nav-icon-sub-menu">
+                    <ul>
+                        <li><a id="sub-menu-entry" href=""><span>Profilo</span></a></li>
+                        <li><a id="sub-menu-entry" href=""><span>Prenotazioni</span></a></li>
+                        <li><a id="sub-menu-entry" href=""><span>Esci</span></a></li>
+                    </ul>
+                </nav> 
+            </div>
+        </nav>  
+
+        <div id="home-main-section">
+            <div id="home-sec-1">
+                <div class="home-card">
+                    <div id="home-card-col1">
+                       <h2>Scegli il professionista adatto a te</h2> 
+                       <p>Scegli un coach che soddifi le tue esigenze sia dal vivo che online!</p>
+                       <a href="" id="learn-more-link"><span>Scopri di più <i class="fa-solid fa-arrow-up-long"></i></span></a>
+                    </div>
+                    <div id="home-card-col2">
+                       <img src="../imgs/oni.jpg" alt=""> 
+                    </div>
+                </div>
+            </div>
+            <div id="home-sec-2">
+                <div id="sec-2-title">
+                    <h1><span> Non importa il livello in cui ti trovi, ci sarà sempre una prefessionista pronto a supportarti</span>
+                    </h1>
+                </div>
+                <span class="spacing"></span>
+                <div id="level-card-container">
+                    <div>
+                        <h2>Livello principiante</h2>
+                        <div class="div-image-container">
+                            <img src="../imgs/beginner/pu.jpg" alt="">
+                            <img src="../imgs/beginner/pushup.jpg" alt="">
+                            <img src="../imgs/beginner/squat.jpg" alt="">
+                            <div class="image-arrow-container">
+                                <span class="left-arrow">
+                                    <i class="fas fa-chevron-left"></i>
+                                </span> 
+                                <span class="right-arrow">
+                                    <i class="fas fa-chevron-right"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h2>Livello intermedio</h2>
+                        <div class="div-image-container">
+                            <img src="../imgs/intermediate/hs.jpg" alt="">
+                            <img src="../imgs/intermediate/mu.jpg" alt="">
+                            <div class="image-arrow-container">
+                                <span class="left-arrow">
+                                    <i class="fas fa-chevron-left"></i>
+                                </span> 
+                                <span class="right-arrow">
+                                    <i class="fas fa-chevron-right"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h2>Livello avanzato</h2>   
+                        <div class="div-image-container">
+                            <img src="../imgs/advance/ofl.jpg" alt="">
+                            <img src="../imgs/advance/planche.jpg" alt="">
+                            <div class="image-arrow-container">
+                                <span class="left-arrow">
+                                    <i class="fas fa-chevron-left"></i>
+                                </span> 
+                                <span class="right-arrow">
+                                    <i class="fas fa-chevron-right"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="map-div">
+                <h1>Consulta la mappa per vedere i coach più vicini a te</h1> 
+                <div id="map-div-flex">
+                    <div id="map"></div>
+                    <div id="map-coach-res">
+                    </div>
+                </div> 
+            </div>
+        </div>
+        <footer>
+            <div id="footer-div">
+                <div id="footer-social-div">
+                    <a href=""><i class="fab fa-linkedin"></i></a>
+                    <a href=""><i class="fab fa-facebook"></i></a>
+                    <a href=""><i class="fab fa-instagram"></i></a>
+                    <a href=""><i class="fab fa-tiktok"></i></a>
+                </div> 
+            </div> 
+            <div>
+                <span>@2026 Web Site name | All rights reserved.</span>
+            </div>
+            <div id="footer-useful-links">
+                <p id="footer-phone-num"><i class="fas fa-phone-alt"></i>:+(39) 123-4567-890. </p> 
+                <p>
+                <a href="">Scopri chi siamo</a>
+                <a href="">Terms of service</a>
+                <a href="">log in</a>
+                </p>
+            </div>
+        </footer>
+    </body>
+</html>
