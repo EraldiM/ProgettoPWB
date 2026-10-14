@@ -1,10 +1,11 @@
-// With this methos we can call sleep as a function
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-function addCoachCardToMapDiv(name, disciplines, parentDiv){
+function addCoachCardToMapDiv(name, disciplines, id, parentDiv){
     let coach_card_div = document.createElement("div");
     coach_card_div.classList.add("home-region-coach-card");
     let anchor = document.createElement("a");
+    let param = new URLSearchParams({coach_id: id})
+    console.log(id);
+    anchor.href = `/public/coach?${param}`;
     let span_a = document.createElement("span");
     anchor.appendChild(span_a);
     span_a.textContent = name;
@@ -22,26 +23,10 @@ function addCoachCardToMapDiv(name, disciplines, parentDiv){
     return;
 }
 
-// Makes the sub-menu of the profile icon appear if we hover the profile icon.
-document.getElementById("profile").addEventListener("mouseenter", ()=>{
-    document.getElementById("icon-sub-menu").classList.remove("hidden");
-});
-
-// this function makes the submenu that pops us after we enter the icon with the mouse disappear after 2 sec we left it.
-// If we come back in 2 secons, the menu keeps showing.
-document.getElementById("icon-sub-menu").addEventListener("mouseleave", async (event)=>{
-    await sleep(2000); 
-    if (!event.target.matches(':hover')){
-        document.getElementById("icon-sub-menu").classList.add("hidden");
-    }
-});
-
-
 document.querySelectorAll(".div-image-container").forEach((container) =>{
     let idx = 0;
 
-    container.querySelectorAll(".right-arrow").forEach((ele)=>{
-        let img_container = ele.closest(".div-image-container");
+    container.querySelectorAll(".right-arrow").forEach((ele)=>{ let img_container = ele.closest(".div-image-container");
         let imgs = img_container.querySelectorAll(":scope > img");
         ele.addEventListener("click", () =>{
             
@@ -85,7 +70,7 @@ simplemaps_countrymap.hooks.preclick_state = async function (id, event) {
 
         coach_div_container.innerHTML = '';
         data.forEach((coach) =>{
-            addCoachCardToMapDiv(`${coach.name} ${coach.last_name}`, coach.categories, coach_div_container);
+            addCoachCardToMapDiv(`${coach.name} ${coach.last_name}`, coach.categories, coach.id, coach_div_container);
         });
 
     } catch (error) {

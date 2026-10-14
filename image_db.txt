@@ -7,3 +7,16 @@ CREATE TABLE images(
     original_name VARCHAR(100) NOT NULL,
     uploaded_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
 );
+
+
+CREATE TABLE reviews(
+    coach_id INT(11) NOT NULL,
+    user_id INT(10) UNSIGNED NOT NULL,
+    review VARCHAR(1000),
+    rating TINY INT,
+    creation_date datetime NOT NULL,
+    meeting_date datetime NOT NULL
+    PRIMARY KEY(coach_id, user_id, meeting_date),
+    CONSTRAINT coach_id FOREIGN KEY (coach_id) REFERENCES coaches(id),
+    CONSTRAINT `fk_booking_user` FOREIGN KEY (`user_id`) REFERENCES `utenti3` (`id`),
+)

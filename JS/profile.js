@@ -1,25 +1,25 @@
 window.addEventListener("load", async function(event){
     try {
-        const res = await fetch("/GET/profile", {
+        const res = await fetch("/api/profile", {
             method: "GET",
             credentials: "same-origin"
         });
 
         const data = await res.json();
         let user = data[0];
-        document.getElementById("profile-user-name").textContent = user.user_name;
-        document.getElementById("profile-name").textContent = user.name;
-        document.getElementById("profile-last-name").textContent = user.last_name;
-        document.getElementById("profile-age").textContent = new Date().getFullYear() - parseInt(user.birth_date.split("-")[0]) + " anni";
-        document.getElementById("profile-sex").textContent = user.sex ? "Maschio" : "Femmina";
-        document.getElementById("profile-subscription-date").textContent = user.creation_date.slice(0,10);
+        document.getElementById("profile-username-field").textContent = user.user_name;
+        document.getElementById("profile-name-field").textContent = user.name;
+        document.getElementById("profile-lastname-field").textContent = user.last_name;
+        document.getElementById("profile-age-field").textContent = new Date().getFullYear() - parseInt(user.birth_date.split("-")[0]) + " anni";
+        document.getElementById("profile-sex-field").textContent = user.sex ? "Maschio" : "Femmina";
+        document.getElementById("profile-subscription-field").textContent = user.creation_date.slice(0,10);
     } catch (error) {
         console.log(error);
     }
 });
 
 document.getElementById("change-name").addEventListener("click", function(){
-    let u_name_span= document.getElementById("profile-user-name");
+    let u_name_span= document.getElementById("profile-username-field");
     let u_name = u_name_span.textContent;
     u_name_span.innerHTML = "";
     let text_field = document.createElement("input");
@@ -28,7 +28,7 @@ document.getElementById("change-name").addEventListener("click", function(){
     text_field.name = "name";
     text_field.required
     text_field.value = u_name;
-    document.getElementById("profile-user-name").appendChild(text_field);
+    document.getElementById("profile-username-field").appendChild(text_field);
     document.getElementById("change-name").hidden = true;
     document.getElementById("submit-change-name-button").hidden = false;
 });
@@ -65,7 +65,7 @@ document.getElementById("submit-change-name-button").addEventListener("click", a
     });
 
     try {
-        const res = await fetch("/user-name", {
+        const res = await fetch("/api/change-username", {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json"

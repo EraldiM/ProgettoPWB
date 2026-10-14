@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Profilo</title>
+        <link href="../style/new_style.css" rel="stylesheet">
+        <!-- <script src="../JS/login.js" defer></script> -->
+        <script src="../JS/profile.js" defer></script>
+        <script src="../JS/navbar.js" defer></script>
+        <script src="https://kit.fontawesome.com/f6a32bf7bc.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+                <li><a href="/public/new_index.html">Home</a></li>
+                <li><a href="/public/explore.html">Esplora</a></li>
+                <li><a href="/public/new_index.html">Chi siamo</a></li>
+                <li id="profile"><a href="../private/new_profile.html"><i class="fas fa-user"></i></a>
+                </li>
+            </ul> 
+            <div id="icon-sub-menu" class="hidden">
+                <nav class="nav-icon-sub-menu">
+                    <ul>
+                        <li id="sub-menu-login"><a class="sub-menu-entry"  href="../public/new_login.html"><span>Log in</span></a></li>
+                        <li id="sub-menu-signin"><a class="sub-menu-entry" href="../public/new_login.html"><span>Sign in</span></a></li>
+                        <li id="sub-menu-profile" hidden><a class="sub-menu-entry" href=""><span>Profilo</span></a></li>
+                        <li id="sub-menu-prenotation" hidden><a class="sub-menu-entry" href=""><span>Prenotazioni</span></a></li>
+                        <li id="sub-menu-exit" hidden><a class="sub-menu-entry" id="submenu-exit-button"><span>Esci</span></a></li>
+                    </ul>
+                </nav> 
+            </div>
+        </nav>  
+        <div class="main-div" id="profile-main-div">
+            <h1>Benvenuto!</h1> 
+            <div id="profile-card">
+                <div id="gradient-upper-background"></div>
+                <div id="profile-information-div">
+                    <span class="profile-field">Nome utente</span>
+                    <div id="profile-username-div">
+                        <p id="profile-name-span">
+                            <span class="profile-information-field"  id="profile-username-field"></span>
+                            <button id="change-name" class="modify-container"><i class="fa-solid fa-pencil"></i></button>
+                            <button class="button-3" id="submit-change-name-button" hidden>
+                                Salva
+                            </button>
+                        </p>
+                    </div>
+                    <span class="profile-field">Nome:</span><span class="profile-information-field" id="profile-name-field"></span>
+                    <span class="profile-field">Cognome:</span><span class="profile-information-field" id="profile-lastname-field"></span>
+                    <span class="profile-field">Età:</span><span class="profile-information-field" id="profile-age-field"></span>
+                    <span class="profile-field">Sesso:</span><span class="profile-information-field" id="profile-sex-field"></span>
+                    <span class="profile-field">Data di iscrizione</span><span class="profile-information-field" id="profile-subscription-field"></span>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <div id="footer-div">
+                <div id="footer-social-div">
+                    <a href=""><i class="fab fa-linkedin"></i></a>
+                    <a href=""><i class="fab fa-facebook"></i></a>
+                    <a href=""><i class="fab fa-instagram"></i></a>
+                    <a href=""><i class="fab fa-tiktok"></i></a>
+                </div> 
+            </div> 
+            <div>
+                <span>@2026 Web Site name | All rights reserved.</span>
+            </div>
+            <div id="footer-useful-links">
+                <p id="footer-phone-num"><i class="fas fa-phone-alt"></i>:+(39) 123-4567-890. </p> 
+                <p>
+                <a href="">Scopri chi siamo</a>
+                <a href="">Terms of service</a>
+                <a href="">log in</a>
+                </p>
+            </div>
+        </footer>
+    </body>
+</html>

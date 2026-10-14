@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Profilo</title>
+        <link href="../style/new_style.css" rel="stylesheet">
+        <script src="../JS/login.js" defer></script>
+        <!-- <script src="../JS/new_profile.js" defer></script> -->
+        <script src="https://kit.fontawesome.com/f6a32bf7bc.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+                <li><a href="/public/new_index.html">Home</a></li>
+                <li><a href="/public/explore.html">Esplora</a></li>
+                <li><a href="/public/new_index.html">Chi siamo</a></li>
+                <li id="profile"><a href="../private/profile.html"><i class="fas fa-user"></i></a>
+                </li>
+            </ul> 
+            <div id="icon-sub-menu" class="hidden">
+                <nav class="nav-icon-sub-menu">
+                    <ul>
+                        <li><a id="sub-menu-entry" href=""><span>Profilo</span></a></li>
+                        <li><a id="sub-menu-entry" href=""><span>Prenotazioni</span></a></li>
+                        <li><a id="sub-menu-entry" href=""><span>Esci</span></a></li>
+                    </ul>
+                </nav> 
+            </div>
+        </nav>  
+        <div id="login-main-section">
+            <div id="login-div">
+                <h1>Effettua il Login</h1>
+                <div class="login-form-div">
+                    <div id="login-username-div">
+                        <p>Nome utente:</p> 
+                        <input type="text" name="" value="" id="username-form" placeholder="Nome utente">
+                    </div> 
+                    <div id="login-passoword-div">
+                        <p>Password:</p> 
+                        <input type="password" name="" value="" id="password-form" placeholder="Password">
+                    </div>
+                    <div>
+                        <p id="login-text-error"></p>
+                    </div>
+                </div>
+                <div id="login-button-container">
+                    <input type="button" class="button-3" id="login-button" name="" value="Login" id="login">
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div id="footer-div">
+                <div id="footer-social-div">
+                    <a href=""><i class="fab fa-linkedin"></i></a>
+                    <a href=""><i class="fab fa-facebook"></i></a>
+                    <a href=""><i class="fab fa-instagram"></i></a>
+                    <a href=""><i class="fab fa-tiktok"></i></a>
+                </div> 
+            </div> 
+            <div>
+                <span>@2026 Web Site name | All rights reserved.</span>
+            </div>
+            <div id="footer-useful-links">
+                <p id="footer-phone-num"><i class="fas fa-phone-alt"></i>:+(39) 123-4567-890. </p> 
+                <p>
+                <a href="">Scopri chi siamo</a>
+                <a href="">Terms of service</a>
+                <a href="">log in</a>
+                </p>
+            </div>
+        </footer>
+    </body>
+</html>

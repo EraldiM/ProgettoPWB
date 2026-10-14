@@ -1,6 +1,8 @@
 let last_coach_id;
 const discipline_list = document.getElementById("discipline-list");
-let tag_selected = false; // this variable represents the discipline that the user has selected, by the fault its value false, a state that represents all possible disciplines.
+const discipline_summary = [];
+// this variable represents the discipline that the user has selected, by the fault its value false, a state that represents all possible disciplines.
+let tag_selected = false; 
 const notFound = document.querySelector(".not-found");
 
 function createPopup(){
@@ -44,7 +46,7 @@ function setPopUp(titleText, paragraphText, containerToAppend){
 }
 
 window.addEventListener("load", async function(){
-    const data = await fetch("/GET/disciplines");
+    const data = await fetch("/api/disciplines");
     console.log("ciao");
 
     const res = await data.json();
@@ -54,18 +56,19 @@ window.addEventListener("load", async function(){
         discipline.textContent = ele.category_name;
         discipline.classList.add("discipline");
         discipline_list.appendChild(discipline);
+        discipline_summary.push(ele.category_name);
     });
-
+    console.log(discipline_summary);
 });
 
 window.addEventListener("load", async function(){
-    const data = await fetch("/GET/coach-list");
+    const data = await fetch("/api/coach-list");
 
     const res = await data.json();
     const coach_div = document.getElementById("coaches-result");
     res.forEach(ele => {
         let discipline_container = document.createElement("div");
-        discipline_container.id = "discipline-tag-container";
+        discipline_container.classList.add("discipline-tag-container");
         name_last_name = document.createElement("a");
         const param = new URLSearchParams({
             coach_id: ele.id
@@ -89,12 +92,10 @@ window.addEventListener("load", async function(){
 });
 
 const icon = document.getElementById("triangle");
-const button = document.getElementById("discipline-button");
+const button = document.getElementById("filter-discipline-button");
 const disciplineList = document.getElementById("discipline-list");
-icon.classList.toggle("triangle-trans");
-disciplineList.classList.toggle("hidden");
 
-document.getElementById("discipline-button").addEventListener("click", async function(){
+document.getElementById("filter-discipline-button").addEventListener("click", async function(){
     icon.classList.toggle("triangle-trans");
     disciplineList.classList.toggle("hidden");
     disciplineList.classList.toggle("open");
@@ -138,7 +139,7 @@ document.getElementById("get-more-coaches").addEventListener("click", async func
         const coach_div = document.getElementById("coaches-result");
         res.forEach(ele => {
             let discipline_container = document.createElement("div");
-            discipline_container.id = "discipline-tag-container";
+            discipline_container.classList.add("discipline-tag-container");
             name_last_name = document.createElement("a");
             const param = new URLSearchParams({
                 coach_id: ele.id
@@ -164,25 +165,20 @@ document.getElementById("get-more-coaches").addEventListener("click", async func
     }
 });
 
-document.getElementById("search-button-coaches").addEventListener("click", async function(){
-    let coach_name = document.getElementById("search-coach-name").value;
-    const old_tag = tag_selected;
-    tag_selected = document.getElementById("discipline-text").textContent;
-    if (tag_selected == "Disciplina"){
-        alert("Scegliere una disciplina.");
-        return;
+document.getElementById("filter-search-button-coaches").addEventListener("click", async function(){
+    const name = document.getElementById("filter-search-coach-name").value || null;
+    console.log(name);
+    const discipline = document.getElementById("discipline-text").value;
+    if(!discipline_summary.includes(discipline)){
+        console.log("ciao");
     }
-    const params = new URLSearchParams({
-        coach_name: coach_name,
-        discipline: tag_selected
-    });
+
     try {
         const data = await fetch(`/GET/filtered-coach?${params}`,{
             method: 'GET'
         });
     
         const res = await data.json();
-        // console.log(data.length);
         if (res.length == 0){
         console.log(res.length);
             let titolo = "Nessun coach trovato.";
@@ -202,7 +198,7 @@ document.getElementById("search-button-coaches").addEventListener("click", async
                 coach_id: ele.id
             });
             console.log(param);
-            name_last_name.href = `/public/coach.html?${param}`;
+            name_last_name.href = `/api/coach.html?${param}`;
             coach_container = document.createElement("div");
             name_last_name.textContent = ele.name + " " + ele.last_name;
             coach_container.classList.add("coach-card");
