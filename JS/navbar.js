@@ -51,3 +51,10 @@ document.getElementById("submenu-exit-button").addEventListener("click", async (
     }      
 });
 
+document.querySelectorAll(".navbar > ul > li > a[href]").forEach((link) => {
+  const paginaDelLink = new URL(link.href).pathname;
+
+  if (paginaDelLink === window.location.pathname) {
+    link.setAttribute("aria-current", "page");
+  }
+});

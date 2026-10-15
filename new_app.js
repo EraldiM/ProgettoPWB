@@ -377,42 +377,79 @@ app.get("/GET/more-coaches", async (req, res) => {
     }
 });
 
-app.get('/api/coach.html', async (req, res) => {
-    res.sendFile(__dirname + '/public/coach.html');
-    const coach_id = req.query.coach_id;
-    console.log(req.query);
-    const query = `SELECT
+app.get("/api/filtered-coach", async (req, res) => {
+    let coach_id = req.query.coach_id;
+    let discipline_name = req.query.discipline;
+    let coach_name = req.query.coach_name;
+    // the following line rapresents the two possibile queries we can perform. The user can select a name or not fot the coach. We have a ternary operator that checks if coach_name has been specified.
+    const query = coach_name == '' ? `
+    SELECT
     coaches.id,
     coaches.name,
     coaches.last_name,
     coaches.sex,
     JSON_ARRAYAGG(
-        coaches_categories.category_name
-        ORDER BY coaches_categories.category_name
+      coaches_categories.category_name
+      ORDER BY coaches_categories.category_name
     ) AS categories
     FROM coaches
     INNER JOIN coaches_categories
-        ON coaches.id = coaches_categories.id_coach
-    WHERE coaches.id = ?
+    ON coaches.id = coaches_categories.id_coach
+    WHERE coaches.id > ?
+    AND EXISTS (
+    SELECT 1
+    FROM coaches_categories AS filter_category
+    WHERE filter_category.id_coach = coaches.id
+      AND filter_category.category_name = ?
+    )
     GROUP BY
-        coaches.id,
-        coaches.name,
-        coaches.last_name,
-        coaches.sex
-    ORDER BY coaches.id;`
-
+    coaches.id,
+    coaches.name,
+    coaches.last_name,
+    coaches.sex
+    ORDER BY coaches.id
+    LIMIT 6; `
+    : ` SELECT 
+    coaches.id,
+    coaches.name,
+    coaches.last_name,
+    coaches.sex,
+    JSON_ARRAYAGG(
+      coaches_categories.category_name
+      ORDER BY coaches_categories.category_name
+    ) AS categories
+    FROM coaches
+    INNER JOIN coaches_categories
+    ON coaches.id = coaches_categories.id_coach
+    WHERE coaches.id > ? AND coaches.name = ?
+    AND EXISTS (
+    SELECT 1
+    FROM coaches_categories AS filter_category
+    WHERE filter_category.id_coach = coaches.id
+      AND filter_category.category_name = ?
+    )
+    GROUP BY
+    coaches.id,
+    coaches.name,
+    coaches.last_name,
+    coaches.sex
+    ORDER BY coaches.id
+    LIMIT 6; `
+    ;
+    
     try {
-        const row = await pool.promise().execute(query, [coach_id]);
-        const coach = row[0];
+        const row = coach_name == '' ?
+            await pool.promise().execute(query, [1, discipline_name])
+            :  await pool.promise().execute(query, [1,coach_name, discipline_name]);
+        const coaches = row[0];
+        console.log(coaches);
 
-        console.log(coach);
-        res.json(coach);
-
+        res.json(coaches);
     } catch (error) {
-        console.log("Errore zio can: " + error);
+        console.log("errore del DB: " + error);
+        res.json(error);
     }
 });
-
 
 // 404 Handling must be one of the last route
 app.use((req, res) => { res.status(404).sendFile(__dirname + '/public/404.html'); });
