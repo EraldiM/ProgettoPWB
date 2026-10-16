@@ -618,6 +618,7 @@ footer a{
     list-style: none;
     background-color: white;
     font-family: "Sora", serif;
+    user-select: none;
 }
 
 #discipline-list{

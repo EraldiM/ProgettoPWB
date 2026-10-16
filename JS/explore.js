@@ -1,12 +1,12 @@
 let last_coach_id;
+let last_coach_name = '';
 const discipline_list = document.getElementById("discipline-list");
-const discipline_summary = ["Disciplina"];
+const discipline_summary = [];
 // this variable represents the discipline that the user has selected, by the fault its value false, a state that represents all possible disciplines.
 let tag_selected = false; 
 const notFound = document.querySelector(".not-found");
 
 function createPopup(){
-    if(document.querySelector(".pop-up")){return;}
     let popupDiv = document.createElement("div");
     popupDiv.classList.add("pop-up");
     // We make sure that the browser first render the pop-up and then we give to then div the other class.
@@ -31,6 +31,7 @@ function removePopup(popUp){
 }
 
 function setPopUp(titleText, paragraphText, containerToAppend){
+    if(document.querySelector(".pop-up")){return;}
     let popUp = createPopup();
     let title = document.createElement("h1");
     title.textContent = titleText;
@@ -90,7 +91,6 @@ window.addEventListener("load", async function(){
         createCoachCard(ele.name + " " + ele.last_name,ele.categories, ele.id)
     });
     last_coach_id = res[res.length - 1].id;
-    console.log(last_coach_id);
 });
 
 const icon = document.getElementById("triangle");
@@ -107,7 +107,9 @@ document.getElementById("discipline-list").addEventListener("click", function(ev
     icon.classList.remove("triangle-trans");
     disciplineList.classList.add("hidden");
     disciplineList.classList.remove("open");
-    document.getElementById("discipline-text").textContent = event.target.textContent;
+    let discipline_selected = event.target.closest(".discipline");
+    if (!discipline_selected){return};
+    document.getElementById("discipline-text").textContent = discipline_selected.textContent;
 });
 
 document.addEventListener("click", function(event){
@@ -122,6 +124,7 @@ document.getElementById("get-more-coaches").addEventListener("click", async func
 
     let params = new URLSearchParams({
         coach_id: last_coach_id,
+        coach_name: last_coach_name,
         discipline: tag_selected
     });
     
@@ -143,25 +146,23 @@ document.getElementById("get-more-coaches").addEventListener("click", async func
             createCoachCard(ele.name + " " + ele.last_name,ele.categories, ele.id)
         });
         last_coach_id = res[res.length - 1].id;
-        console.log(last_coach_id);
     } catch (error) {
-        console.log("erroreeee: " + error);
+        console.log("Error:" + error);
     }
 });
 
 document.getElementById("filter-search-button-coaches").addEventListener("click", async function(){
     const old_tag = tag_selected;
-    const name = document.getElementById("filter-search-coach-name").value || '';
-    const discipline = document.getElementById("discipline-text").textContent;
+    const old_last_coach_id = last_coach_id;
+    const old_last_coach_name = last_coach_name;
+    last_coach_id = 0;
+    last_coach_name = document.getElementById("filter-search-coach-name").value || '';
+    const discipline =  discipline_summary.includes(document.getElementById("discipline-text").textContent) ? document.getElementById("discipline-text").textContent : '';
     tag_selected = discipline;
-    if(!discipline_summary.includes(discipline)){
-        console.log("Disciplina inserita non valida");
-        return;
-    }
 
     const params = new URLSearchParams({
         coach_id: 0,
-        coach_name: name,
+        coach_name: last_coach_name,
         discipline: tag_selected
     });
 
@@ -173,6 +174,8 @@ document.getElementById("filter-search-button-coaches").addEventListener("click"
         const res = await data.json();
         if (res.length == 0){
             tag_selected = old_tag;
+            last_coach_name = old_last_coach_name;
+            last_coach_id = old_last_coach_id;
             let titolo = "Nessun coach trovato.";
             let descrizione = "Provare un altro nome o un altra disciplina."
             setPopUp(titolo, descrizione, document.getElementById("explore-div"));
