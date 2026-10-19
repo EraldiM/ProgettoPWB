@@ -3,7 +3,7 @@ let last_coach_name = '';
 const discipline_list = document.getElementById("discipline-list");
 const discipline_summary = [];
 // this variable represents the discipline that the user has selected, by the fault its value false, a state that represents all possible disciplines.
-let tag_selected = false; 
+let tag_selected = ''; 
 const notFound = document.querySelector(".not-found");
 
 function createPopup(){
