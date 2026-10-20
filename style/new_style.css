@@ -1118,17 +1118,44 @@ margin: 0;
     padding: 0.5em;
     border-radius: 50%;
     outline: 2px solid #aaa;
+    transition: color 0.5s ease, outline-color 0.5s ease;
+}
+
+.fa-info:hover{
+    color: #3b8532;
+    outline-color: #3b8532;
 }
 
 #signin-username-div{
     position: relative;
 }
 
-#user-name-rule-div{
+#user-name-rule-div, #password-rule-div{
+    font-family: "Manrope", sans-serif;
     position: absolute;
-    width: 10em;
-    height: 9em;
+    padding: 0 0.5em;
+    width: 18em;
     background-color: #fff;
-    border: 1px solid #000;
+    border-radius: 20px;
+    box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
     transition: opacity 0.5s ease;
+}
+
+#user-name-rule-div.hidden, #password-rule-div.hidden{
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0s 0.3s;
+}
+
+.signin-p-verify{
+    position: absolute;
+    margin: 0;
+    margin-top: 0.2em;
+    font-family: "Playfair", sans-serif;
+    color: red;
+}
+
+.text-green{
+    color: #298e46;
 }
