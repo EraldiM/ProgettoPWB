@@ -2,6 +2,8 @@ document.getElementById("login-button").addEventListener("click", async function
     event.preventDefault();
     const user_name = document.getElementById("username-form").value;
     const password = document.getElementById("password-form").value;
+    const textError = document.getElementById("login-text-error");
+    textError.textContent = "";
     if (!user_name || !password){
         document.getElementById("login-text-error").textContent = "Formato non valido!";
         return;
@@ -21,9 +23,12 @@ document.getElementById("login-button").addEventListener("click", async function
 
         if (data.success == true){
             window.location.replace("/private/new_profile.html");
+            return;
+        }else{
+        textError.textContent = data.error;
         }
     } catch (error) {
-        document.getElementById("login-text-error").textContent = "Nome utente o password non corretti!";
+        document.getElementById("login-text-error").textContent = "Non e possibile accedere alla piattaforma attualmente";
         console.log(error);
     }
 })

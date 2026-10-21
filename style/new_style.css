@@ -49,9 +49,15 @@ body{
     text-decoration: none;
 }
 
-.navbar ul li a{
+.navbar ul li a,
+.navbar ul li > .unavailable-link{
     text-decoration: none;
     color: #6c757d;
+}
+
+.unavailable-link{
+    opacity: 0.6;
+    cursor: default;
 }
 #profile{
     position: absolute;
@@ -169,7 +175,8 @@ footer div{
     font-size: 2em;
 }
 
-#footer-social-div a{
+#footer-social-div a,
+#footer-social-div span{
     text-decoration: none;
     color: #fff;
 }
@@ -186,7 +193,8 @@ footer div{
 margin: 0;
 }
 
-#footer-useful-links a{
+#footer-useful-links a,
+#footer-useful-links .unavailable-link{
     color: #fff;
     padding: 0 0.5em;
 }
@@ -629,6 +637,7 @@ margin: 0;
 
 #no-acc-sign-in{
     display: flex;
+    margin-top: 1em;
     justify-content: end;
     margin-bottom: 2em;
 }
@@ -1016,7 +1025,7 @@ margin: 0;
     padding: 1em 2em;
     display: flex;
     flex-direction: column;
-    gap: 1em;
+    gap: 1.5em;
 }
 
 #signin-form-container p{
@@ -1097,6 +1106,7 @@ margin: 0;
 #signin-button-div{
     display: flex;
     justify-content: center;
+    flex-direction: column;
     align-content: center;
     margin-top: 3em;
 }
@@ -1107,6 +1117,8 @@ margin: 0;
 
 #signin-button{
     font-size: 1.2em;
+    align-self: center;
+    width: fit-content;
 }
 
 .fa-info{
@@ -1148,14 +1160,47 @@ margin: 0;
     transition: opacity 0.3s ease, visibility 0s 0.3s;
 }
 
-.signin-p-verify{
-    position: absolute;
-    margin: 0;
-    margin-top: 0.2em;
+#signin-form-container{
+    /* margin: 0.25em 0 0; */
     font-family: "Playfair", sans-serif;
-    color: red;
 }
 
-.text-green{
+#signin-form-container .signin-p-verify:empty{
+    display: none;
+}
+
+#signin-form-container .signin-p-verify.text-green{
     color: #298e46;
+}
+
+.signin-p-verify{
+    position: absolute;
+    padding:0;
+    margin: 0;
+    color: #f00; 
+    font-size: 1em;
+    font-family: "Playfair", sans-serif;
+}
+
+#signin-alert-error{
+    position: relative;
+    padding-left: 1em;
+    padding-top: 1em;
+    font-size: 1.3em;
+}
+
+#signin-remember-login a{
+    text-align: right;
+    font-family: "Manrope", sans-serif;
+    font-weight: 700;
+    color: #999;
+    padding-right: 1.2em;
+    text-decoration: none;
+    display: block;
+}
+
+
+#signin-remember-login a:hover{
+    color: #000;
+    text-decoration: underline;
 }

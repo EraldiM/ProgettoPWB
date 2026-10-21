@@ -164,8 +164,16 @@ app.post("/api/login", async (req, res) =>{
     const {username, password} = req.body;
     const query = "SELECT id, user_name FROM utenti3 WHERE user_name = ? AND password = ?";
     try {
-        const [righe, colonne] = await pool.promise().execute(query, [username, password]);
-        const user = righe[0];
+        const [row] = await pool.promise().execute(query, [username, password]);
+        const user = row[0];
+
+        // No username and password matches the request
+        if (!user){
+            return res.status(401).json({
+                success: false,
+                error: "Nome utente o password non corretti"
+            });
+        }
 
         // This payload contains the information about the user
         const payload = {
@@ -176,7 +184,7 @@ app.post("/api/login", async (req, res) =>{
         // We transform the payload into a token cripted
         const token = jwt.sign(payload, JWT_SECRET, {
             algorithm: "HS256",
-            expiresIn: "1h"
+            expiresIn: "1000h"
         });
 
         // The token has a expiration time of 1000 hours
@@ -220,8 +228,8 @@ app.get("/api/profile", async (req, res)=>{
         id = ?`;
 
         try {
-            const righe = await pool.promise().execute(query, [id]);
-            const user = righe[         0];
+            const row = await pool.promise().execute(query, [id]);
+            const user = row[0];
 
             res.json(user);
 
@@ -258,6 +266,177 @@ app.patch("/api/change-username",authenticateToken, async (req, res)=>{
         }
         return res.status(500).json({error: "Errore durante l'aggiornamento"});
     }
+});
+
+// ***************************************
+//
+// This section covers explore.html routes
+//
+// ***************************************
+
+const usernameRegex = /^[A-Za-z][A-Za-z0-9._-]{3,19}$/;
+const nameRegex = /^[A-Za-z]{1,50}$/;
+const passwordRegex =
+    /^(?=.*\p{Lu})(?=.*\p{Nd})(?=.*[\p{P}\p{S}])\S{6,20}$/u;
+
+function isFilled(value) {
+    return typeof value === "string" && value.trim() !== "";
+}
+
+function isRealDate(value) {
+    // We create 3 separete checks for year, month and day. If the values are invalid we return.
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+    if (!match) return false;
+
+    // We then Normalize the values to metch them with a valid date.
+    const year = Number(match[1]);
+    const month = Number(match[2]);
+    const day = Number(match[3]);
+
+    const date = new Date(0);
+    date.setUTCFullYear(year, month - 1, day);
+
+    return date.getUTCFullYear() === year &&
+        date.getUTCMonth() === month - 1 &&
+        date.getUTCDate() === day;
+}
+
+function dateYearsAgo(today, years) {
+    const year = today.getFullYear() - years;
+    const month = today.getMonth();
+    const lastDay = new Date(year, month + 1, 0).getDate();
+    const day = Math.min(today.getDate(), lastDay);
+
+    return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+function validateSignup(body) {
+    const errors = {};
+    const data = body && typeof body === "object" && !Array.isArray(body) ? body : {};
+
+    const { user_name, name, last_name, sex, birth_date, password, confirm_password } = data;
+
+    if (!isFilled(user_name)) {
+        errors.user_name = "Il nome utente è obbligatorio.";
+    } else if (!usernameRegex.test(user_name)) {
+        errors.user_name = "Nome utente non valido.";
+    }
+
+    if (!isFilled(name)) {
+        errors.name = "Il nome è obbligatorio.";
+    } else if (!nameRegex.test(name)) {
+        errors.name = "Il nome deve contenere da 1 a 50 lettere.";
+    }
+
+    if (!isFilled(last_name)) {
+        errors.last_name = "Il cognome è obbligatorio.";
+    } else if (!nameRegex.test(last_name)) {
+        errors.last_name = "Il cognome deve contenere da 1 a 50 lettere.";
+    }
+
+    if (sex !== "maschio" && sex !== "femmina") {
+        errors.sex = "Seleziona il sesso.";
+    }
+
+    // We check if birthdate is given, we then check is a possible date is given, we then check if the date given if accepted (the person bust be older than 10 and younger than 100 years).
+    if (!isFilled(birth_date)) {
+        errors.birth_date = "La data di nascita è obbligatoria.";
+    } else if (!isRealDate(birth_date)) {
+        errors.birth_date = "Data di nascita non valida.";
+    } else {
+        const today = new Date();
+        const oldest = dateYearsAgo(today, 100);
+        const newest = dateYearsAgo(today, 10);
+
+        if (birth_date < oldest || birth_date > newest) {
+            errors.birth_date = "L'età deve essere compresa tra 10 e 100 anni.";
+        }
+    }
+
+    if (!isFilled(password)) {
+        errors.password = "La password è obbligatoria.";
+    } else if (!passwordRegex.test(password)) {
+        errors.password = "Password non valida.";
+    }
+
+    if (!isFilled(confirm_password)) {
+        errors.confirm_password = "Conferma la password.";
+    } else if (confirm_password !== password) {
+        errors.confirm_password = "Le password non coincidono.";
+    }
+
+    return errors;
+}
+
+app.post("/api/signin", async (req, res)=>{
+    const errors = validateSignup(req.body);
+
+    // Handling fields checks for the server.
+
+    if (Object.keys(errors).length > 0) {
+        return res.status(400).json({
+            success: false,
+            errors
+        });
+    }
+
+    const {user_name, name, last_name, sex, birth_date, password} = req.body;
+
+    const query = "INSERT INTO utenti3 (user_name, password, name, last_name, sex, birth_date) VALUES(?, ?, ?, ?, ?, ?)";
+    let righe;
+    let user;
+    try{
+        righe = await pool.promise().execute(query, [user_name, password, name, last_name, sex == "maschio" ? 1 : 0, birth_date]);
+        user = righe[0];
+
+    }catch(error){
+
+        console.log("INSERT utenti3 fallito:", {
+            code: error.code,
+            errno: error.errno,
+            sqlState: error.sqlState
+        });
+
+        if (error.code === "ER_DUP_ENTRY"){
+            return res.status(409).json({
+                success: false,
+                error: "Nome utente già utilizzato."
+            });
+        }
+        if (error.code === "ER_DISK_FULL" || error.code === "ER_RECORD_FILE_FULL"){
+            return res.status(503).json({
+                success: false,
+                error: "Attualmente impossibile aggiungere nuovi utenti."
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            error: "Errore interno dureante la registrazione dell'utente"
+        });
+    }
+
+    const payload = {
+        userID: user.insertId,      // InsertId Is the Id (primary key) of the user that has been just added.
+        userName: user_name
+    };
+
+    const token = jwt.sign(payload, JWT_SECRET, {
+        algorithm: "HS256",
+        expiresIn: "1h"
+    });
+
+    res.cookie("token", token,{
+        httpOnly: true,
+        secure: true,
+        maxAge: 3600000,
+        sameSite: "strict"
+    });
+
+    res.json({
+        success: true,
+        message: "Login riuscito!"
+    });
 });
 
 // ***************************************
@@ -416,5 +595,5 @@ app.use((req, res) => { res.status(404).sendFile(__dirname + '/public/404.html')
 
 
 app.listen(port, () => {
-    console.log(`Server in ascolto su http://localhost:${port}/public/index.html`);
+    console.log(`Server in ascolto su http://localhost:${port}/public/new_index.html`);
 });
