@@ -182,7 +182,7 @@ app.get("/GET/coach-dates", async (req, res)=>{
 });
 
 //Handing the booking route
-app.post("/booking", authenticateToken, async (req, res) =>{
+app.post("/api/booking", authenticateToken, async (req, res) =>{
     const {coach_id, start_time, end_time} = req.body;
     const user_id = req.user.userID;
 

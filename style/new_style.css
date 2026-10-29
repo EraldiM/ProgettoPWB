@@ -17,6 +17,10 @@ body{
     pointer-events: none;
 }
 
+.hidden2{
+    display: none;
+}
+
 .custom-button{
     border: none;
     border-radius: 2em;
@@ -616,8 +620,13 @@ margin: 0;
     margin-bottom: 3em;
 }
 
-.login-form-div p{
+.login-form-div p, .login-form-div label{
     font-family: "Manrope", sans-serif;
+}
+
+.login-form-div label{
+    display: block;
+    margin: 1em 0;
 }
 
 #login-button-container{
@@ -893,7 +902,7 @@ margin: 0;
     outline: 1px solid #5db374;
 }
 
-.coach-card p{
+.coach-fullname{
     font-family: "Manrope", sans-serif;
     color: #000;
     text-decoration: none;
@@ -901,9 +910,10 @@ margin: 0;
     position: relative;
     font-weight: 500;
     width: fit-content;
+    margin-bottom: 0;
 }
 
-.coach-card p::after{
+.coach-card .coach-fullname::after{
     content: "";
     position: absolute;
     left: 0;
@@ -916,7 +926,20 @@ margin: 0;
     transition: transform 0.3s ease;
 }
 
-.coach-card:hover p::after{
+#coach-region{
+    color: #444;
+    font-family: "Playfair", sans-serif;
+    font-weight: 300;
+    font-size: 1em;
+    margin: 0;
+}
+
+
+#coach-region::after{
+    content: ""
+}
+
+.coach-card:hover .coach-fullname::after{
     transform: scaleX(1);
 }
 
@@ -1028,9 +1051,14 @@ margin: 0;
     gap: 1.5em;
 }
 
-#signin-form-container p{
+#signin-form-container p, #signin-form-container label{
     font-family: "Manrope", sans-serif;
     font-weight: 500;
+}
+
+#signin-form-container label{
+    display: block;
+    margin: 1em 0;
 }
 
 #signin-form-container input{
@@ -1203,4 +1231,376 @@ margin: 0;
 #signin-remember-login a:hover{
     color: #000;
     text-decoration: underline;
+}
+
+/* ************************************************ */
+/*                                                  */
+/*   The section below is relative to coach.html    */
+/*                                                  */
+/* ************************************************ */
+
+#coach-main-div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10em 0;
+    background: #ffffff;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 15%, rgba(196, 219, 184, 1) 100%);
+}
+
+#coach-main-div h1{
+    font-family: "Manrope", sans-serif;
+    font-size: 2.2em;
+    margin-bottom: 2em;
+}
+
+#coach-card-div{
+    background-color: #fff;
+    min-height: 30em;
+    outline: 5px solid #344e41;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    outline-offset: -20px;
+}
+
+#coach-card-grid-div{
+    display: grid;
+    padding: 3em 6em;
+    grid-template-columns: max-content 1fr;
+    column-width:50%;
+    column-gap: 4em;
+    gap: 2em;
+}
+
+
+#coach-card-grid-div span{
+    font-size: 1.4em;
+    font-weight: 450;
+    font-family: "Playfair", sans-serif;
+}
+
+#coach-card-grid-div span:nth-child(odd){
+    text-align: right;
+}
+
+#coach-card-grid-div span:nth-child(even){
+    font-size: 1.6em;
+}
+
+#coach-disciplines{
+    padding: 0;
+    margin: 0;
+    font-size: 1.6em;
+    font-weight: 450;
+    font-family: "Playfair", sans-serif;
+}
+
+
+#button-booking-options{
+    font-size: 1.5em;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 3em;
+}
+
+#overlay{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    inset: 0;
+    z-index: 11;
+    opacity: 0.33;
+    filter: blur(10px);
+    background-color: black;
+}
+
+#booking-div{
+    z-index: 12;
+    position: absolute;
+    margin-top: 10em;
+    width: 70em;
+    height: 55em;
+    background-color: white;
+    border-radius: 3em;
+    /* border: 1px solid #344e41; */
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+#close-booking-button{
+    position: absolute;
+    right: 0;
+    margin-right: 2em;
+    margin-top: 1em;
+    background-color: #fff;
+    border: none;
+    border-radius:50%;
+    width: 2em;
+    height: 2em;
+    font-size: 1.3em;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+
+#close-booking-button:hover{
+    background-color: #888;
+    color: #fff;
+}
+
+#booking-div h1{
+    text-align: center;
+    margin-top: 1.3em;
+}
+
+.week{
+    text-align: center;
+    margin-bottom: 2em;
+    font-family: "Manrope", sans-serif;
+    user-select: none;
+}
+
+#booking-week{
+    display: inline-block;
+    padding: 0 1em;
+    font-size: 2em;
+    font-weight: 500;
+    width: 11em;
+}
+
+
+#booking-left-arrow, #booking-right-arrow{
+    width: 2em;
+    height: 2em;
+    border: none;
+    padding: 0.4em;
+    border-radius: 50%;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #000;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    background-color: transparent;
+}
+
+#booking-left-arrow:hover, #booking-right-arrow:hover{
+    background-color: #ccc;
+    color: #fff;
+}
+
+.days, .time-slot-div{
+    font-family: "Manrope", sans-serif;
+    font-weight: 500;
+    display: flex;
+    justify-content:space-evenly;
+    margin: 2em 0;
+    flex-wrap: wrap;
+    gap: 3em;
+}
+
+.time-slot-div{
+    margin: 2em 2em;
+}
+
+.days input[type="radio"], .time-slot-div input[type="radio"]{
+    position: absolute;
+    opacity: 0;
+}
+
+.days label, .time-slot-div label{
+    display: inline-block;
+    padding: 10px 18px;
+    border: 1px solid #555;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: white;
+    user-select: none;
+}
+
+.days input[type="radio"]:checked + label, .time-slot-div input[type="radio"]:checked + label {
+    color: white;
+    background-color: #344e41 ;
+    /* border-color: #007bff; */
+}
+
+.days input[type="radio"]:focus-visible + label , .time-slot-div input[type="radio"]:focus-visible + label{
+    outline: 2px solid #000;
+    outline-offset: 2px;
+}
+
+.not-select{
+    opacity: 0.4;
+    cursor: not-allowed !important;
+}
+
+
+#date-book-button-div{
+    display: flex;
+    justify-content: center;
+    margin-top: 4em;
+}
+
+#date-book-button{
+    font-size: 2em;
+}
+
+#selected-day-div{
+    display: flex;
+    justify-content: center;
+}
+
+#selected-day-span{
+    font-family: "Manrope", sans-serif;
+    font-weight: 600;
+    font-size: 2.5em;
+}
+
+#booking-response-div{
+    text-align: center;
+    color: #65B45D;
+    font-family: "Manrope", sans-serif;
+    font-size: 3.5em;
+    font-weight: 600;
+}
+
+
+/* ******************************************************* */
+/*                                                         */
+/*   The section below is relative to prenotazioni.html    */
+/*                                                         */
+/* ******************************************************* */
+
+#prenotazioni-main{
+    min-height: 70vh;
+    padding: 9rem max(1.5rem, calc((100% - 70rem) / 2)) 6rem;
+    box-sizing: border-box;
+    font-family: "Manrope", sans-serif;
+}
+
+.prenotazioni-header h1{
+    margin: 0;
+    color: #344e41;
+    font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.prenotazioni-header p{
+    margin: 0.75rem 0 2rem;
+    color: #52645a;
+    font-size: 1.1rem;
+}
+
+.prenotazioni-sections{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.prenotazioni-sections a{
+    padding: 0.65rem 1rem;
+    border: 1px solid #344e41;
+    border-radius: 999px;
+    color: #344e41;
+    background: #fff;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.prenotazioni-sections a:hover,
+.prenotazioni-sections a:focus-visible{
+    color: #fff;
+    background: #344e41;
+}
+
+.prenotazioni-section{
+    margin-top: 2rem;
+    scroll-margin-top: 7rem;
+}
+
+.prenotazioni-section h2{
+    margin: 0 0 1rem;
+    color: #344e41;
+    font-size: 1.5rem;
+}
+
+.prenotazioni-lista{
+    display: grid;
+    gap: 1rem;
+}
+
+.prenotazioni-empty-state{
+    display: flex;
+    min-height: 11rem;
+    padding: 2rem;
+    box-sizing: border-box;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+    border: 1px solid #d8e5d9;
+    border-radius: 1rem;
+    background: #fff;
+    color: #52645a;
+    text-align: center;
+    box-shadow: 0 8px 22px rgba(29, 65, 41, 0.07);
+}
+
+.prenotazioni-empty-state i{
+    color: #3b8532;
+    font-size: 2rem;
+}
+
+.prenotazioni-empty-state p{
+    margin: 0;
+}
+
+.prenotazioni-empty-state .button-3{
+    display: inline-block;
+}
+
+@media (max-width: 700px){
+    .prenotazioni-page > .navbar > ul{
+        min-height: 4.5rem;
+        margin: 0;
+        padding: 0 4rem 0 1rem;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.65em;
+    }
+
+    .prenotazioni-page #profile{
+        right: 0.5rem;
+        width: auto;
+        height: auto;
+        margin: 0;
+    }
+
+    .prenotazioni-page .nav-icon-sub-menu{
+        transform: none;
+        right: 0.5rem;
+    }
+
+    #prenotazioni-main{
+        padding: 7rem 1rem 4rem;
+    }
+
+    .prenotazioni-page > footer{
+        height: auto;
+        padding: 2rem 1rem;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .prenotazioni-page > footer div{
+        align-self: auto;
+    }
+
+    .prenotazioni-page #footer-useful-links,
+    .prenotazioni-page #footer-useful-links p{
+        align-items: flex-start;
+        line-height: 1.8;
+    }
+
+    .prenotazioni-page #footer-phone-num{
+        align-self: auto;
+    }
 }

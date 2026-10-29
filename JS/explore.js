@@ -43,23 +43,28 @@ function setPopUp(titleText, paragraphText, containerToAppend){
 
 }
 
-function createCoachCard(fullName, disciplines, id){
+function createCoachCard(fullName, disciplines, id, region){
     const coach_div = document.getElementById("coaches-result");
     let discipline_container = document.createElement("div");
     discipline_container.classList.add("discipline-tag-container");
-    name_last_name = document.createElement("p");
+    let name_last_name = document.createElement("p");
+    name_last_name.classList.add("coach-fullname");
+    let region_p = document.createElement("p");
+    region_p.textContent = region;
+    region_p.id = "coach-region";
     const param = new URLSearchParams({
         coach_id: id
     });
     coach_container_a = document.createElement("a");
     coach_container_a.classList.add("coach-card-anchor");
-    coach_container_a.href = `/public/coach.html?${param}`;
+    coach_container_a.href = `/public/new_coach.html?${param}`;
     coach_container = document.createElement("div");
     name_last_name.textContent = fullName;
     coach_container.classList.add("coach-card");
     coach_container_a.appendChild(coach_container);
     coach_div.appendChild(coach_container_a);
     coach_container.append(name_last_name);
+    coach_container.appendChild(region_p);
     disciplines.forEach(category => {
         categoryDOM = document.createElement("span");
         categoryDOM.classList.add("discipline-tag");
@@ -88,7 +93,8 @@ window.addEventListener("load", async function(){
 
     const res = await data.json();
     res.forEach(ele => {
-        createCoachCard(ele.name + " " + ele.last_name,ele.categories, ele.id)
+        console.log(ele);
+        createCoachCard(ele.name + " " + ele.last_name,ele.categories, ele.id, ele.region)
     });
     last_coach_id = res[res.length - 1].id;
 });
@@ -141,9 +147,9 @@ document.getElementById("get-more-coaches").addEventListener("click", async func
             setPopUp(title, description, document.getElementById("explore-div"));
             return;
         }
-        const coach_div = document.getElementById("coaches-result");
         res.forEach(ele => {
-            createCoachCard(ele.name + " " + ele.last_name,ele.categories, ele.id)
+            console.log(ele);
+            createCoachCard(ele.name + " " + ele.last_name,ele.categories, ele.id, ele.region)
         });
         last_coach_id = res[res.length - 1].id;
     } catch (error) {

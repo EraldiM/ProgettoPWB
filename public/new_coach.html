@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Coach</title>
+        <link href="../style/new_style.css" rel="stylesheet">
+        <script src="../JS/navbar.js" defer></script>
+        <!-- <script type="module" src="../JS/notify.js" defer></script> -->
+        <script type="module" src="../JS/coach.js" defer></script>
+        <script src="https://kit.fontawesome.com/f6a32bf7bc.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+                <li><a href="/public/new_index.html">Home</a></li>
+                <li><a href="/public/new_explore.html">Esplora</a></li>
+                <li><span class="unavailable-link">Chi siamo</span></li>
+                <li id="profile"><a href="/private/new_profile.html"><i class="fas fa-user"></i></a></li>
+            </ul>
+            <div id="icon-sub-menu" class="hidden">
+                <nav class="nav-icon-sub-menu">
+                    <ul>
+                        <li id="sub-menu-login"><a class="sub-menu-entry" href="/public/new_login.html"><span>Log in</span></a></li>
+                        <li id="sub-menu-signin"><a class="sub-menu-entry" href="/public/new_signin.html"><span>Sign in</span></a></li>
+                        <li id="sub-menu-profile" hidden><a class="sub-menu-entry" href="/private/new_profile.html"><span>Profilo</span></a></li>
+                        <li id="sub-menu-prenotation" hidden><a class="sub-menu-entry" href="/private/prenotazioni.html"><span>Prenotazioni</span></a></li>
+                        <li id="sub-menu-exit" hidden><a class="sub-menu-entry" id="submenu-exit-button"><span>Esci</span></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </nav>
+
+        <main>
+            <div id="coach-main-div">
+                <div id="overlay" class="hidden"></div>
+                <div id="booking-div" class="hidden">
+                    <button id="close-booking-button" type="button"><i class="fas fa-times" ></i></button>
+                    <h1>Scegli la settimana dell'incontro</h1>
+                    <div class="week">
+                        <button type="button" id="booking-left-arrow"><i class="fas fa-long-arrow-alt-left"></i></button>
+                        <span id="booking-week"></span>
+                        <button type="button" id="booking-right-arrow"><i class="fas fa-long-arrow-alt-right"></i></button>
+                    </div>
+                    <h1 id="booking-day-selector">Seleziona il giorno:</h1>
+                    <div class="days">
+                        <span class="hidden2" data-day="1">
+                            <input type="radio" id="lunedi" name="day" value="1">
+                            <label for="lunedi">Lunedì</label>
+                        </span>
+
+                        <span class="hidden2" data-day="2">
+                            <input type="radio" id="martedi" name="day" value="2">
+                            <label for="martedi">Martedì</label>
+                        </span>
+
+                        <span class="hidden2" data-day="3">
+                            <input type="radio" id="mercoledi" name="day" value="3">
+                            <label for="mercoledi">Mercoledì</label>
+                        </span>
+
+                        <span class="hidden2" data-day="4">
+                            <input type="radio" id="giovedi" name="day" value="4">
+                            <label for="giovedi"> Giovedì</label>
+                        </span>
+
+                        <span class="hidden2" data-day="5">
+                            <input type="radio" id="venerdi" name="day" value="5">
+                            <label for="venerdi"> Venerdì</label>
+                        </span>
+
+                        <span class="hidden2" data-day="6">
+                            <input type="radio" id="sabato" name="day" value="6">
+                            <label for="sabato">Sabato</label>
+                        </span>
+
+                        <span class="hidden2" data-day="7">
+                            <input type="radio" id="domenica" name="day" value="7">
+                            <label for="domenica">Domenica</label>
+                        </span>
+                        </div>
+                        <h1>Seleziona l'orario per l'incontro</h1>
+
+                        <div class="time-slot-div"></div>
+                        <div id="selected-day-div">
+                           <span id="selected-day-span"></span>
+                        </div>
+                        <div id="booking-response-div"></div>
+                        <div id="date-book-button-div">
+                            <input type="button" name="book-date" class="button-3 hidden2" value="Prenota" id="date-book-button">
+                    </div>
+                </div>
+                <h1>Benvenuto nella pagina di Pippo Franco</h1>
+                <div id="coach-card-div">
+                    <div id="coach-card-grid-div">
+                        <span>Nome:</span> <span id="coach-name"></span> 
+                        <span>Cognome:</span> <span id="coach-last-name"></span> 
+                        <span>Discipline:</span> <ul id="coach-disciplines"></ul>
+                        <span>Numero di telefono:</span> <span id="coach-phone-num"></span> 
+                        <span>Email:</span> <span id="coach-email"></span> 
+                        <span>Regione:</span> <span id="coach-region"></span> 
+                    </div> 
+                    <button type="button" class="button-3" id="button-booking-options">Prenota un incontro</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div id="footer-div">
+                <div id="footer-social-div">
+                    <span><i class="fab fa-linkedin"></i></span>
+                    <span><i class="fab fa-facebook"></i></span>
+                    <span><i class="fab fa-instagram"></i></span>
+                    <span><i class="fab fa-tiktok"></i></span>
+                </div>
+            </div>
+            <div>
+                <span>@2026 Web Site name | All rights reserved.</span>
+            </div>
+            <div id="footer-useful-links">
+                <p id="footer-phone-num"><i class="fas fa-phone-alt"></i>:+(39) 123-4567-890. </p>
+                <p>
+                    <span class="unavailable-link">Scopri chi siamo</span>
+                    <span class="unavailable-link">Terms of service</span>
+                    <a href="/public/new_login.html">log in</a>
+                </p>
+            </div>
+        </footer>
+    </body>
+</html>

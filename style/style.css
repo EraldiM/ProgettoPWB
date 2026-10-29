@@ -331,10 +331,15 @@ footer a{
     font-family: "Sora", serif;
 }
 
-#login-div p{
+#login-div p, #login-div label{
     font-family: "Sora", solid;
     font-weight: 300;
     
+}
+
+#login-div label{
+    display: block;
+    margin: 1em 0;
 }
 
 #login-div input[type=text], #login-div input[type=password]{
@@ -1074,5 +1079,4 @@ button:hover{
     outline: 2px solid #000;
     outline-offset: 2px;
 }
-
 

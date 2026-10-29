@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Le mie prenotazioni</title>
+        <link href="../style/new_style.css" rel="stylesheet">
+        <script src="../JS/navbar.js" defer></script>
+        <script src="https://kit.fontawesome.com/f6a32bf7bc.js" crossorigin="anonymous"></script>
+    </head>
+    <body class="prenotazioni-page">
+        <nav class="navbar" aria-label="Navigazione principale">
+            <ul>
+                <li><a href="/public/new_index.html">Home</a></li>
+                <li><a href="/public/new_explore.html">Esplora</a></li>
+                <li><span class="unavailable-link">Chi siamo</span></li>
+                <li id="profile"><a href="/private/new_profile.html" aria-label="Area personale"><i class="fas fa-user" aria-hidden="true"></i></a></li>
+            </ul>
+            <div id="icon-sub-menu" class="hidden">
+                <nav class="nav-icon-sub-menu" aria-label="Menu account">
+                    <ul>
+                        <li id="sub-menu-login"><a class="sub-menu-entry" href="/public/new_login.html"><span>Log in</span></a></li>
+                        <li id="sub-menu-signin"><a class="sub-menu-entry" href="/public/new_signin.html"><span>Sign in</span></a></li>
+                        <li id="sub-menu-profile" hidden><a class="sub-menu-entry" href="/private/new_profile.html"><span>Profilo</span></a></li>
+                        <li id="sub-menu-prenotation" hidden><a class="sub-menu-entry" href="/private/prenotazioni.html" aria-current="page"><span>Prenotazioni</span></a></li>
+                        <li id="sub-menu-exit" hidden><a class="sub-menu-entry" id="submenu-exit-button"><span>Esci</span></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </nav>
+
+        <main id="prenotazioni-main" class="main-div">
+            <header class="prenotazioni-header">
+                <h1>Le mie prenotazioni</h1>
+                <p>Consulta i tuoi incontri con i coach.</p>
+            </header>
+
+            <nav class="prenotazioni-sections" aria-label="Sezioni delle prenotazioni">
+                <a href="#prossime-prenotazioni">In programma</a>
+                <a href="#prenotazioni-passate">Passate</a>
+            </nav>
+
+            <section id="prossime-prenotazioni" class="prenotazioni-section" aria-labelledby="prossime-title">
+                <h2 id="prossime-title">In programma</h2>
+                <div id="prossime-lista" class="prenotazioni-lista" aria-live="polite">
+                    <div class="prenotazioni-empty-state">
+                        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+                        <p>Le tue prossime prenotazioni appariranno qui.</p>
+                        <a class="button-3" href="/public/new_explore.html">Trova un coach</a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="prenotazioni-passate" class="prenotazioni-section" aria-labelledby="passate-title">
+                <h2 id="passate-title">Passate</h2>
+                <div id="passate-lista" class="prenotazioni-lista" aria-live="polite">
+                    <div class="prenotazioni-empty-state">
+                        <i class="fas fa-history" aria-hidden="true"></i>
+                        <p>Lo storico dei tuoi incontri apparirà qui.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div id="footer-div">
+                <div id="footer-social-div">
+                    <span><i class="fab fa-linkedin"></i></span>
+                    <span><i class="fab fa-facebook"></i></span>
+                    <span><i class="fab fa-instagram"></i></span>
+                    <span><i class="fab fa-tiktok"></i></span>
+                </div>
+            </div>
+            <div>
+                <span>@2026 Web Site name | All rights reserved.</span>
+            </div>
+            <div id="footer-useful-links">
+                <p id="footer-phone-num"><i class="fas fa-phone-alt"></i>:+(39) 123-4567-890. </p>
+                <p>
+                    <span class="unavailable-link">Scopri chi siamo</span>
+                    <span class="unavailable-link">Terms of service</span>
+                    <a href="/public/new_login.html">log in</a>
+                </p>
+            </div>
+        </footer>
+    </body>
+</html>

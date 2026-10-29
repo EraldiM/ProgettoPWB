@@ -77,8 +77,8 @@ function redirectIfAuthenticated(req, res, next){
 app.use('/JS', express.static(__dirname + "/JS"));
 app.use('/style', express.static(__dirname + "/style"));
 app.use('/imgs', express.static(__dirname + "/imgs"));
-app.get("/public/login.html", redirectIfAuthenticated, (req,res) => {res.sendFile(__dirname + "/public/login.html")});
-app.get("/public/signup.html", redirectIfAuthenticated, (req,res) => {res.sendFile(__dirname + "/public/signup.html")});
+app.get("/public/new_login.html", redirectIfAuthenticated,(req,res) => {res.sendFile(__dirname + "/public/new_login.html")});
+app.get("/public/new_signin.html", redirectIfAuthenticated,(req,res) => {res.sendFile(__dirname + "/public/new_signin.html")});
 app.use('/public', express.static(__dirname + "/public"));
 app.use('/private', authenticateToken, express.static(__dirname + "/private"));
 
@@ -464,6 +464,7 @@ app.get("/api/coach-list", async (req, res) =>{
     coaches.name,
     coaches.last_name,
     coaches.sex,
+    coaches.region,
     JSON_ARRAYAGG(
         coaches_categories.category_name
         ORDER BY coaches_categories.category_name
@@ -496,6 +497,7 @@ app.get("/GET/more-coaches", async (req, res) => {
     coaches.name,
     coaches.last_name,
     coaches.sex,
+    coaches.region,
     JSON_ARRAYAGG(
       coaches_categories.category_name
       ORDER BY coaches_categories.category_name
@@ -587,6 +589,150 @@ app.get("/api/filtered-coach", async (req, res) => {
     } catch (error) {
         console.log("errore del DB: " + error);
         res.json(error);
+    }
+});
+
+// ***************************************
+//
+// This section covers coach.html routes
+//
+// ***************************************
+
+app.get("/api/coach-info", async (req, res) =>{
+    const coach_id = req.query.coach_id;
+    const query = `SELECT
+    coaches.id,
+    coaches.name,
+    coaches.last_name,
+    coaches.phone,
+    coaches.email,
+    coaches.sex,
+    coaches.region,
+    JSON_ARRAYAGG(
+        coaches_categories.category_name
+        ORDER BY coaches_categories.category_name
+    ) AS categories
+    FROM coaches
+    INNER JOIN coaches_categories
+        ON coaches.id = coaches_categories.id_coach
+    WHERE coaches.id = ?
+    GROUP BY
+        coaches.id,
+        coaches.name,
+        coaches.last_name,
+        coaches.sex
+    ORDER BY coaches.id;`
+
+    try {
+        const row = await pool.promise().execute(query, [coach_id]);
+        const coach = row[0];
+
+        res.json(coach);
+
+    } catch (error) {
+        console.log("Errore zio can: " + error);
+    }
+});
+
+
+app.get("/api/coach-dates", async (req, res)=>{
+    const {coach_id, startDate, endDate} = req.query;
+
+    const query = `SELECT DISTINCT day_of_week, start_time, end_time FROM coach_working_hours WHERE coach_id = ? ORDER BY day_of_week;`
+    const query2 = `SELECT * FROM bookings
+        WHERE coach_id = ?
+        AND status IN ('confirmed', 'pending')
+        AND start_at < ?
+        AND end_at > ?; `
+    try {
+        const [schedule] = await pool.promise().execute(query, [coach_id]);
+        const [booking] = await pool.promise().execute(query2, [coach_id, endDate, startDate]);
+
+        res.json({
+            schedule,
+            booking
+        });
+         
+    } catch (error) {
+        console.log("Errore: ", error);
+    }
+});
+
+function parseDateTime(time){
+    if (typeof time !== "string") return null;
+
+    const match = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/.exec(time);
+    if (!match) return null;
+
+    const [year, month, day, hour, minute, second] = match.slice(1).map(Number);
+    const date = new Date(year, month - 1, day, hour, minute, second);
+
+    // Date normalizza valori impossibili, per esempio il 31 febbraio.
+    if (date.getFullYear() !== year ||
+        date.getMonth() !== month - 1 ||
+        date.getDate() !== day ||
+        date.getHours() !== hour ||
+        date.getMinutes() !== minute ||
+        date.getSeconds() !== second) return null;
+
+    return date;
+    }
+
+function checkForInvalidParameters(coach_id, user_id, start_time, end_time){
+    const validId = id =>{
+        return typeof id === "number" ?
+            Number.isSafeInteger(id) && id > 0:
+            typeof id === "string" &&
+            /^[1-9]\d*$/.test(id) &&
+            Number.isSafeInteger(Number(id))
+    }
+
+    if(!validId(coach_id) || !validId(user_id)){return true}
+
+
+    // We only accept dates in the format YYYY:MM:DD HH:mm:ss
+    let startDate = parseDateTime(start_time);
+    let endDate = parseDateTime(end_time);
+
+    if (!startDate|| !endDate|| startDate > endDate){
+        return true;
+    }
+
+    if (startDate.getFullYear() === endDate.getFullYear() && startDate.getMonth() === endDate.getMonth() && startDate.getDate()=== endDate.getDate() && endDate.getTime() - startDate.getTime() === 60 * 60 * 1000){
+        return false;
+    }
+
+    return true;
+   
+}
+
+app.post("/api/booking", authenticateToken, async (req, res) =>{
+    const {coach_id, start_time, end_time} = req.body;
+    const user_id = req.user.userID;
+
+    if(checkForInvalidParameters(coach_id, user_id, start_time, end_time)) return res.status(400).json({error: "parametri non validi"});
+
+    const query = `INSERT INTO bookings (coach_id, user_id, start_at, end_at) VALUES (?, ?, ?, ?);`
+    const query2 = `SELECT id FROM bookings WHERE coach_id = ? AND status IN ('pending', 'confirmed') AND start_at < ? AND end_at > ? LIMIT 1;`
+
+    try {
+        const [dup]= await pool.promise().execute(query2, [coach_id, end_time, start_time]);
+        if (dup.length > 0) {
+            return res.status(409).json({
+                error: "È già presente una prenotazione allo stesso orario"
+            })
+        }
+
+
+        const row = await pool.promise().execute(query, [coach_id, user_id, start_time, end_time]);
+
+        return res.status(201).json({
+            success: "Prenotazione eseguita con successo",
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error: error.message});
     }
 });
 

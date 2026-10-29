@@ -1,306 +1,362 @@
-import { createPopup, removePopup, setPopup } from "./notify.js";
+import { setPopup } from "./notify.js";
 
-window.addEventListener("load", async function(){
-    const coach_id = window.location.search; if(coach_id){
-        try {
-            const res = await fetch(`/GET/coach-info${coach_id}`, {
-                method: "GET",
-                headers: {"Content-Type": "application/json"},
-            });
+// Parametri della pagina e riferimenti agli elementi già presenti nell'HTML.
+const pagaParams = new URLSearchParams(window.location.search);
+const coach_id = pagaParams.get("coach_id");
+const leftArrow = document.getElementById("booking-left-arrow");
+const bookButton = document.getElementById("date-book-button");
+const time_container = document.querySelector(".time-slot-div");
+const selectedDaySpan = document.getElementById("selected-day-span");
+const bookResponseDiv = document.getElementById("booking-response-div")
+const bookingDiv = document.getElementById("booking-div");
+const bookOptionButton = document.getElementById("button-booking-options");
 
-        const data = await res.json();
-        const coach = data[0];
+// Stato condiviso tra caricamento delle disponibilità e selezione dello slot.
+let date2 = getLastMon();
+let coach_schedule = [];
+let coachBooked = [];
+let global_start_time;
+let selected_day; // 0 = lunedì, 1 = martedì, ..., 6 = domenica.
+let selected_time_slot;
+let availabilityRequest;
+let dayNumMonyear;
 
-        // creting DOM elements for the coach in coach.html
-        
-        const coach_card = document.getElementById("coach-card-div");
-        
-        let name_div = document.createElement("p");
-        name_div.classList.add("coach-p");
-        let name_s = document.createElement("span");
-        name_s.textContent = "Nome:";
-        let coach_name_s = document.createElement("span");
-        coach_name_s.textContent = coach.name;
-        name_div.appendChild(name_s);
-        name_div.appendChild(coach_name_s);
-        coach_card.appendChild(name_div);
-
-        let lname_div = document.createElement("p");
-        lname_div.classList.add("coach-p");
-        let lname_p = document.createElement("span");
-        lname_p.textContent = "Cognome:";
-        const lname_coach_p = document.createElement("span");
-        lname_coach_p.textContent = coach.last_name;
-        lname_div.appendChild(lname_p);
-        lname_div.appendChild(lname_coach_p);
-        coach_card.appendChild(lname_div);
-
-        let disciplines_div = document.createElement("div");
-        disciplines_div.classList.add("coach-p");
-        disciplines_div.id = "coach-disciplines-div";
-        let disciplines_p = document.createElement("span");
-        let disciplines_coach_ul = document.createElement("ul");
-        disciplines_p.textContent = "Di cosa mi occupo:"
-        coach.categories.forEach((element) => {
-            let discipline = document.createElement("li");
-            discipline.textContent = element;
-            disciplines_coach_ul.appendChild(discipline);
-        });
-        disciplines_div.appendChild(disciplines_p);
-        disciplines_div.appendChild(disciplines_coach_ul);
-        coach_card.appendChild(disciplines_div);
-
-        let phone_p = document.createElement("p");
-        phone_p.classList.add("coach-p");
-        let phone_text_s = document.createElement("span");
-        phone_text_s.textContent = "Telefono:"
-        let phone_n_s = document.createElement("span");
-        phone_n_s.textContent = coach.phone;
-        phone_p.appendChild(phone_text_s);
-        phone_p.appendChild(phone_n_s);
-        coach_card.appendChild(phone_p);
-
-        let mail_p = document.createElement("p");
-        mail_p.classList.add("coach-p");
-        let mail_text_s = document.createElement("span");
-        mail_text_s.textContent = "email:";
-        let mail_s = document.createElement("span");
-        mail_s.textContent = coach.email;
-        mail_p.appendChild(mail_text_s);
-        mail_p.appendChild(mail_s);
-        coach_card.appendChild(mail_p);
-    } catch (error) {
-       console.log("Errore:", error);
-       }
-    }
-
-
-});
-
-function sumDays(ogDate, days){
+// Funzioni per le date.
+function sumDays(ogDate, days) {
     const date = new Date(ogDate);
     date.setDate(date.getDate() + days);
     return date.toLocaleDateString("it-IT").replaceAll("/", "-");
 }
 
-function getLastMon(date = new Date){
+function getLastMon(date = new Date()) {
     const mon = new Date(date);
     const diffDays = (mon.getDay() + 6) % 7;
-
     mon.setDate(mon.getDate() - diffDays);
     mon.setHours(0, 0, 0, 0);
-
     return mon;
 }
 
+function getDateFromString(dateString) {
+    // Accetta sia le date ISO dell'API sia "YYYY-MM-DD HH:mm:ss".
+    return new Date(dateString.replace(" ", "T"));
+}
+
 function formattedweek(start, finish) {
-
-    const dataInizio = new Date(`${start}T00:00:00`);
-    const dataFine = new Date(`${finish}T00:00:00`);
-
+    const dataInizio = getDateFromString(start + "T00:00:00");
+    const dataFine = getDateFromString(finish + "T00:00:00");
     const giornoInizio = dataInizio.getDate();
-
     const fineFormattata = dataFine.toLocaleDateString("it-IT", {
-    day: "numeric",
-    month: "long",
-    year: "numeric"
+        day: "numeric",
+        month: "long",
+        year: "numeric"
     });
-
     return `${giornoInizio}–${fineFormattata}`;
 }
 
-// Date object that will keep track of week range that the user is watching.
-let date2 = new Date();
-
-// start time and end time of the coach for a single day
-let global_start_time;
-let end_time;
-
-// Possible values: 0=Mon, 1=Tue, ...
-let selected_day
-let selected_time_slot
-
-// This variable contains time infos about the coach.
-let coach_schedule;
-
-
-const pagaParams = new URLSearchParams(window.location.search);
-const coach_id = pagaParams.get("coach_id");
-
-document.getElementById("book-button").addEventListener("click", async function(){
-    // re-initialize date
-    date2 = getLastMon(new Date);
-    let overlay = document.getElementById("overlay");
-    overlay.classList.remove("hidden")
-    let book_div = document.getElementById("book-div")
-    book_div.classList.remove("hidden")
-
-    let start_date = date2.toLocaleDateString("it-IT").split("/").reverse().join("-");
-    let end_date = sumDays(date2, 7).split("-").reverse().join("-");
-
-    let formatted_text = formattedweek(start_date, end_date);
-
-    let text_week = document.getElementById("booking-week");
-    text_week.textContent = formatted_text;
-
-    try {
-
-
-        let params = new URLSearchParams({
-            coach_id,
-            start_date,
-            end_date
-        })
-
-        const res = await fetch(`/GET/coach-dates?${params}`,{
-            method: 'GET',
-        });
-
-        const data = await res.json();
-        coach_schedule = data.schedule;
-        
-
-        coach_schedule.forEach(day=> {
-            document.querySelector(`[data-day="${day.day_of_week}"]`)?.classList.remove("hidden");
-        });
-        
-
-    } catch (error) {
-        console.log("Errore: ", error);
-    }
-
-});
-
-document.getElementById("close-booking-s").addEventListener("click", async function(){
-    document.getElementById("overlay").classList.add("hidden");
-    document.getElementById("book-div").classList.add("hidden");
-});
-
-// left arrow behaviour
-document.getElementById("booking-left-arrow").addEventListener("click", function(){
-    if(date2 < new Date()){ return;}
-    date2.setDate(date2.getDate() - 8);
-
-    let start_date = date2.toLocaleDateString("it-IT").split("/").reverse().join("-");
-    let end_date = sumDays(date2, 7).split("-").reverse().join("-");
-
-    let formatted_text = formattedweek(start_date, end_date);
-
-    let text_week = document.getElementById("booking-week");
-    text_week.textContent = formatted_text;
-});
-
-// right arrow behaviour
-document.getElementById("booking-right-arrow").addEventListener("click", function(){
-    date2.setDate(date2.getDate() + 8);
-
-    let start_date = date2.toLocaleDateString("it-IT").split("/").reverse().join("-");
-    let end_date = sumDays(date2, 7).split("-").reverse().join("-");
-
-    let formatted_text = formattedweek(start_date, end_date);
-
-    let text_week = document.getElementById("booking-week");
-    text_week.textContent = formatted_text;
-});
-
-// function that make appear time-slot according to coache's schedule
-document.querySelectorAll('input[name="day"]').forEach(input => {
-    input.addEventListener("change", async (event) =>{
-        
-        coach_schedule.forEach(day =>{
-            if (day.day_of_week == event.target.value) {
-                let time_slot = document.querySelector(".time-slot-div");
-
-                selected_day = parseInt(event.target.value);
-
-                let prov_date= new Date(date2);
-                let cd = sumDays(prov_date, selected_day)
-                
-                time_slot.innerHTML = "";
-                let start_time = parseInt(day.start_time.split(":")[0])
-                let end_time = parseInt(day.end_time.split(":")[0])
-
-                // try {
-                //     const data = await fetch("/get-booked-datec",{
-                //         method: "GET",
-                //     })
-                // } catch (error) {
-                //
-                // }
-
-                while(start_time < end_time){
-                    let radio = document.createElement("input");
-                    radio.type = "radio";
-                    radio.name = "time";
-                    radio.id = `${start_time}`;
-                    let label = document.createElement("label");
-                    label.textContent= `${start_time}:00-${start_time+1}:00`;
-                    label.id = `label-${start_time}`
-                    label.htmlFor =  `${start_time}`;
-
-                    time_slot.appendChild(radio);
-                    time_slot.appendChild(label);
-                    start_time++;
-                }
-            }
-        });
-
-    });
-});
-
-// Radio delegator, since I've created radios dinamically, we can't call the listener globabally since are not created yet a the start-time of the page.
-const time_container = document.querySelector(".time-slot-div");
-
-time_container.addEventListener("change", event => {
-    if (event.target.matches('input[type="radio"][name="time"]')){
-        document.getElementById("date-book-button").classList.remove("hidden2");
-        global_start_time = event.target.id;
-        global_start_time = document.getElementById(`label-${global_start_time}`).textContent;
-    }
-});
-
-
-document.getElementById("date-book-button").addEventListener("click", async function(){
-
-    if (!global_start_time || !selected_day) {
+// Caricamento dei dati del coach.
+async function loadCoach() {
+    if (!coach_id) {
         return;
     }
 
-    const timeVar1 = sumDays(date2, selected_day - 1).split("-").reverse().join("-") + " " + global_start_time.split("-")[0] + ":00";
-    const timeVar2 = sumDays(date2, selected_day - 1).split("-").reverse().join("-") + " " + global_start_time.split("-")[1] + ":00";
-
     try {
-         const res = await fetch("/booking",{
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                coach_id: coach_id,
-                start_time: timeVar1,
-                end_time: timeVar2
-            })
-         });
-
-        if (res.status == 401) {
-            window.location.replace("/public/login.html");
-            return;
-        }
-
-
-        if (res.status == 409) {
-            setPopup("Orario già prenotato", "Provare a scegliere un altro orario", document.getElementById("main-div-coach"));
-            return;
+        const res = await fetch(`/api/coach-info?${pagaParams}`);
+        if (!res.ok) {
+            throw new Error("Impossibile caricare il coach");
         }
 
         const data = await res.json();
-        const res_div = document.getElementById("booking-response-div");
-        let res_p = document.createElement("p");
-        res_p.textContent = `Prenotazione eseguita per il giorno ${timeVar1.split(" ")[0]} alle ore: ${timeVar1.split(" ")[1]}-${timeVar2.split(" ")[1]}`;
-        res_div.appendChild(res_p);
-        
-        
+        const coach = data[0];
+        if (!coach) {
+            throw new Error("Coach non trovato");
+        }
+
+        const coachName = document.getElementById("coach-name");
+        coachName.textContent = coach.name;
+        const coachLastName = document.getElementById("coach-last-name");
+        coachLastName.textContent = coach.last_name;
+
+        const coachDisciplines = document.getElementById("coach-disciplines");
+        coachDisciplines.replaceChildren();
+        coach.categories.forEach(element => {
+            const discipline = document.createElement("li");
+            discipline.textContent = element;
+            coachDisciplines.appendChild(discipline);
+        });
+
+        const coachPhone = document.getElementById("coach-phone-num");
+        coachPhone.textContent = coach.phone;
+        const coachEmail = document.getElementById("coach-email");
+        coachEmail.textContent = coach.email;
+        const coachRegion = document.getElementById("coach-region");
+        coachRegion.textContent = coach.region;
     } catch (error) {
-        console.log("Error:", error);
+        console.error("Errore:", error);
+    }
+}
+
+// Aggiornamento della settimana e dei giorni disponibili.
+function resetTimeSelection() {
+    global_start_time = undefined;
+    selected_time_slot = undefined;
+    bookButton.classList.add("hidden2");
+    time_container.replaceChildren();
+}
+
+function updateLeftArrowState() {
+    const isCurrentWeek = date2 <= getLastMon();
+    leftArrow.classList.toggle("not-select", isCurrentWeek);
+    leftArrow.disabled = isCurrentWeek;
+    selectedDaySpan.textContent = "";
+}
+
+function updateWeekAvailability() {
+    updateLeftArrowState();
+    const start_date = sumDays(date2, 0).split("-").reverse().join("-");
+    const end_date = sumDays(date2, 6).split("-").reverse().join("-");
+    return updateAvailability(start_date, end_date);
+}
+
+async function updateAvailability(startDate, endDate) {
+    // Un cambio rapido di settimana annulla il caricamento precedente.
+    availabilityRequest?.abort();
+    availabilityRequest = new AbortController();
+    const { signal } = availabilityRequest;
+
+    resetTimeSelection();
+    selected_day = undefined;
+    coach_schedule = [];
+    coachBooked = [];
+
+    document.querySelectorAll('input[name="day"]').forEach(radio => {
+        radio.checked = false;
+        radio.disabled = true;
+    });
+    document.querySelectorAll(".days [data-day]").forEach(day => {
+        day.classList.add("hidden2");
+    });
+
+    const formatted_text = formattedweek(startDate, endDate);
+    const text_week = document.getElementById("booking-week");
+    text_week.textContent = formatted_text;
+
+    try {
+        // La query usa start_at < endDate: il limite esclusivo è il lunedì
+        // successivo, così comprende anche le prenotazioni di domenica.
+        const date = getDateFromString(endDate + "T00:00:00");
+        const params = new URLSearchParams({
+            coach_id,
+            startDate,
+            endDate: sumDays(date, 1).split("-").reverse().join("-")
+        });
+        const res = await fetch(`/api/coach-dates?${params}`, { signal });
+        if (!res.ok) {
+            throw new Error("Impossibile caricare le disponibilità");
+        }
+
+        const data = await res.json();
+        if (signal.aborted) {
+            return;
+        }
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const mon = getDateFromString(startDate + "T00:00:00");
+        coach_schedule = data.schedule;
+        coachBooked = data.booking;
+
+        coach_schedule.forEach(day => {
+            const element = document.querySelector(`[data-day="${day.day_of_week}"]`);
+            if (!element) {
+                return;
+            }
+
+            const date = new Date(mon);
+            date.setDate(date.getDate() + Number(day.day_of_week) - 1);
+            const isInvalid = date < today;
+
+            const radio = element.querySelector('input[name="day"]');
+            radio.disabled = isInvalid;
+            element.querySelector("label").classList.toggle("not-select", isInvalid);
+            element.classList.remove("hidden2");
+        });
+    } catch (error) {
+        if (error.name === "AbortError") {
+            return;
+        }
+        console.error("Errore:", error);
+        setPopup("Disponibilità non caricate", "Riprova a selezionare la settimana", document.getElementById("coach-main-div"));
+    }
+}
+
+// Creazione e verifica degli slot orari del giorno selezionato.
+function checkForInvalidTimeSlot(start_time, end_time) {
+    return coachBooked.some(booking => {
+        const start_at = getDateFromString(booking.start_at);
+        const end_at = getDateFromString(booking.end_at);
+        return start_time < end_at && end_time > start_at;
+    });
+}
+
+function renderTimeSlots() {
+    resetTimeSelection();
+    const time_slot = time_container;
+    const today = new Date();
+
+    coach_schedule.forEach(day => {
+        if (Number(day.day_of_week) !== selected_day + 1) {
+            return;
+        }
+
+        const prov_date = new Date(date2);
+        const [dayy, month, year] = sumDays(prov_date, selected_day).split("-").map(Number);
+        let start_time = Number(day.start_time.split(":")[0]);
+        const start_minute = Number(day.start_time.split(":")[1]);
+        const end_time = Number(day.end_time.split(":")[0]);
+        const end_minute = Number(day.end_time.split(":")[1]);
+
+        // L'intera ora deve rientrare nell'orario di lavoro del coach.
+        while ((start_time + 1) * 60 + start_minute <= end_time * 60 + end_minute) {
+            const slotStart = new Date(year, month - 1, dayy, start_time, start_minute);
+            const slotEnd = new Date(year, month - 1, dayy, start_time + 1, start_minute);
+            const radio = document.createElement("input");
+            radio.type = "radio";
+            radio.name = "time";
+            radio.id = `time-${start_time}-${start_minute}`;
+
+            // Più fasce lavorative possono contenere lo stesso slot.
+            if (!document.getElementById(radio.id)) {
+                const label = document.createElement("label");
+                label.textContent = `${String(start_time).padStart(2, "0")}:${String(start_minute).padStart(2, "0")}-${String(start_time + 1).padStart(2,"0") }:${String(start_minute).padStart(2, "0")}`;
+                label.id = `label-${radio.id}`;
+                label.htmlFor = radio.id;
+
+                const isInvalid = slotStart <= today || checkForInvalidTimeSlot(slotStart, slotEnd);
+                radio.disabled = isInvalid;
+                label.classList.toggle("not-select", isInvalid);
+
+                time_slot.appendChild(radio);
+                time_slot.appendChild(label);
+            }
+            start_time++;
+        }
+    });
+}
+
+// Invio della prenotazione selezionata.
+async function bookAppointment() {
+    if (!global_start_time || selected_day === undefined || bookButton.disabled) {
+        return;
+    }
+
+    const timeVar1 = sumDays(date2, selected_day).split("-").reverse().join("-") + " " + global_start_time.split("-")[0] + ":00";
+    const timeVar2 = sumDays(date2, selected_day).split("-").reverse().join("-") + " " + global_start_time.split("-")[1] + ":00";
+    bookButton.disabled = true;
+
+    try {
+        const res = await fetch("/api/booking", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                coach_id,
+                start_time: timeVar1,
+                end_time: timeVar2
+            })
+        });
+
+        // Il server attuale reindirizza al login se manca l'autenticazione.
+        if (res.redirected) {
+            window.location.replace(res.url);
+            return;
+        }
+        if (res.status === 401) {
+            window.location.replace("/public/login.html");
+            return;
+        }
+        if (res.status === 409) {
+            setPopup("Orario già prenotato", "Provare a scegliere un altro orario", document.getElementById("coach-main-div"));
+            await updateWeekAvailability();
+            return;
+        }
+        if (!res.ok) {
+            throw new Error("Impossibile completare la prenotazione");
+        }
+
+        if (res.status === 201) {
+            const res_div = document.getElementById("booking-response-div");
+            const res_p = document.createElement("p");
+            res_p.textContent = `Prenotazione eseguita`;
+            res_div.appendChild(res_p);
+            await updateWeekAvailability();
+        }
+    } catch (error) {
+        console.error("Errore:", error);
+        setPopup("Prenotazione non riuscita", "Riprova tra poco", document.getElementById("coach-main-div"));
+    } finally {
+        bookButton.disabled = false;
+    }
+}
+
+// Listener: collegano le azioni dell'utente alle funzioni sopra.
+window.addEventListener("load", loadCoach);
+
+document.getElementById("button-booking-options").addEventListener("click", () => {
+    const overlay = document.getElementById("overlay");
+    overlay.classList.remove("hidden");
+    const book_div = document.getElementById("booking-div");
+    book_div.classList.remove("hidden");
+
+    date2 = getLastMon();
+    updateWeekAvailability();
+});
+
+document.getElementById("close-booking-button").addEventListener("click", () => {
+    document.getElementById("overlay").classList.add("hidden");
+    document.getElementById("booking-div").classList.add("hidden");
+});
+
+leftArrow.addEventListener("click", () => {
+    if (date2 <= getLastMon()) {
+        return;
+    }
+    date2.setDate(date2.getDate() - 7);
+    updateWeekAvailability();
+});
+
+document.getElementById("booking-right-arrow").addEventListener("click", () => {
+    date2.setDate(date2.getDate() + 7);
+    updateWeekAvailability();
+    selectedDaySpan.textContent = "";
+});
+
+document.querySelectorAll('input[name="day"]').forEach(input => {
+    input.addEventListener("change", event => {
+        selected_day = Number(event.target.value) - 1;
+        renderTimeSlots();
+        let formattedDaySelected = new Date(date2);
+        formattedDaySelected.setDate(formattedDaySelected.getDate() + selected_day);
+        dayNumMonyear = event.target.id.charAt(0).toUpperCase() + event.target.id.slice(1) + " " + formattedDaySelected.toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
+        selectedDaySpan.textContent = dayNumMonyear;
+        bookResponseDiv.textContent = "";
+    });
+});
+
+// Gli input degli orari sono dinamici: il listener è sul contenitore.
+time_container.addEventListener("change", event => {
+    if (event.target.matches('input[type="radio"][name="time"]') && !event.target.disabled) {
+        selected_time_slot = event.target.id;
+        global_start_time = document.getElementById(`label-${selected_time_slot}`).textContent;
+        bookButton.classList.remove("hidden2");
+        console.log(global_start_time);
+        selectedDaySpan.textContent = dayNumMonyear + " ore " + global_start_time;
+    }
+});
+
+bookButton.addEventListener("click", bookAppointment);
+
+document.addEventListener("click", function(event){
+    if (!bookingDiv.contains(event.target) && !bookOptionButton.contains(event.target)){
+        document.getElementById("overlay").classList.add("hidden");
+        document.getElementById("booking-div").classList.add("hidden");
     }
 });

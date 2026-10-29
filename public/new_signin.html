@@ -24,7 +24,7 @@
                         <li id="sub-menu-login"><a class="sub-menu-entry" href="/public/new_login.html"><span>Log in</span></a></li>
                         <li id="sub-menu-signin"><a class="sub-menu-entry" href="/public/new_signin.html"><span>Sign in</span></a></li>
                         <li id="sub-menu-profile" hidden><a class="sub-menu-entry" href="/private/new_profile.html"><span>Profilo</span></a></li>
-                        <li id="sub-menu-prenotation" hidden><span class="unavailable-link">Prenotazioni</span></li>
+                        <li id="sub-menu-prenotation" hidden><a class="sub-menu-entry" href="/private/prenotazioni.html"><span>Prenotazioni</span></a></li>
                         <li id="sub-menu-exit" hidden><a class="sub-menu-entry" id="submenu-exit-button"><span>Esci</span></a></li>
                     </ul>
                 </nav> 
@@ -36,23 +36,23 @@
                     <h1>Registrati</h1>
                     <div id="signin-form-container">
                         <div id="signin-username-div">
-                            <p>Nome utente:</p> 
+                            <label for="username-form">Nome utente:</label>
                             <input type="text" name="username" id="username-form" placeholder="Nome utente" aria-describedby="signin-username-verify" required>
                             <span id="username-info-span"><i class="fas fa-info"></i></span>
                             <p class="signin-p-verify" id="signin-username-verify" aria-live="polite"></p>
                         </div> 
                         <div id="signin-name-div">
-                            <p>Nome:</p> 
+                            <label for="name-form">Nome:</label>
                             <input type="text" name="name" id="name-form" placeholder="Nome" aria-describedby="signin-name-verify" required>
                             <p class="signin-p-verify" id="signin-name-verify" aria-live="polite"></p>
                         </div>                
                         <div id="signin-lastname-div">
-                            <p>Cognome:</p> 
+                            <label for="lastname-form">Cognome:</label>
                             <input type="text" name="last_name" id="lastname-form" placeholder="Cognome" aria-describedby="signin-lastname-verify" required>
                             <p class="signin-p-verify" id="signin-lastname-verify" aria-live="polite"></p>
                         </div>                
                         <div id="signin-sex-div">
-                            <p>Sesso:</p>
+                            <label for="sex-list">Sesso:</label>
                             <div id="sex-list-wrapper">
                                 <select id="sex-list" name="sex" aria-describedby="signin-sex-verify" required>
                                     <option value="" selected disabled>Scegli il tuo sesso</option> 
@@ -64,18 +64,18 @@
                             <p class="signin-p-verify" id="signin-sex-verify" aria-live="polite"></p>
                         </div>
                         <div id="signin-birthdate-div">
-                            <p><label for="birthdate-form">Data di nascita:</label></p>
+                            <label for="birthdate-form">Data di nascita:</label>
                             <input type="date" name="birth_date" id="birthdate-form" aria-describedby="signin-birthdate-verify" required>
                             <p class="signin-p-verify" id="signin-birthdate-verify" aria-live="polite"></p>
                         </div>
                         <div id="signin-password-div">
-                            <p>Password:</p> 
+                            <label for="password-form">Password:</label>
                             <input type="password" name="password" id="password-form" placeholder="Password" aria-describedby="sigin-password-verify" required>
                             <span id="password-info-span"><i class="fas fa-info"></i></span>
                             <p class="signin-p-verify" id="sigin-password-verify" aria-live="polite"></p>
                         </div>
                         <div id="signin-confirm-password-div">
-                            <p>Conferma Password:</p> 
+                            <label for="confirm-password-form">Conferma Password:</label>
                             <input type="password" name="confirm_password" id="confirm-password-form" placeholder="Password" aria-describedby="sigin-confirm-password-verify" required>
                             <p class="signin-p-verify" id="sigin-confirm-password-verify" aria-live="polite"></p>
                         </div>
