@@ -10,13 +10,12 @@ CREATE TABLE images(
 
 
 CREATE TABLE reviews(
-    coach_id INT(11) NOT NULL,
-    user_id INT(10) UNSIGNED NOT NULL,
+    id INT UNSIGNED NOT NUL AUTO_INCREMENT PRIMARY KEY,
+    booking_id INT UNSIGNED NOT NULL UNIQUE,
     review VARCHAR(1000),
-    rating TINY INT,
-    creation_date datetime NOT NULL,
-    meeting_date datetime NOT NULL
-    PRIMARY KEY(coach_id, user_id, meeting_date),
-    CONSTRAINT coach_id FOREIGN KEY (coach_id) REFERENCES coaches(id),
-    CONSTRAINT `fk_booking_user` FOREIGN KEY (`user_id`) REFERENCES `utenti3` (`id`),
+    rating TINYINT UNSIGNED NOT NULL,
+    creation_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT booking_id FOREIGN KEY (booking_id) REFERENCES bookings(id),
+    CONSTRAINT chk_reviews_rating 
+        CHECK (rating BETWEEN 1 AND 5)
 )

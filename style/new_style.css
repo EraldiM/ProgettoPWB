@@ -1468,7 +1468,7 @@ margin: 0;
 /*                                                         */
 /* ******************************************************* */
 
-#prenotazioni-main{
+#reservation-main-div{
     min-height: 70vh;
     padding: 9rem max(1.5rem, calc((100% - 70rem) / 2)) 6rem;
     box-sizing: border-box;
@@ -1481,20 +1481,20 @@ margin: 0;
     font-size: clamp(2rem, 4vw, 3rem);
 }
 
-.prenotazioni-header p{
+.reservation-header p{
     margin: 0.75rem 0 2rem;
     color: #52645a;
     font-size: 1.1rem;
 }
 
-.prenotazioni-sections{
+.reservation-sections{
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
     margin-bottom: 2rem;
 }
 
-.prenotazioni-sections a{
+.reservation-sections a{
     padding: 0.65rem 1rem;
     border: 1px solid #344e41;
     border-radius: 999px;
@@ -1504,36 +1504,39 @@ margin: 0;
     text-decoration: none;
 }
 
-.prenotazioni-sections a:hover,
-.prenotazioni-sections a:focus-visible{
+.reservation-sections a:hover,
+.reservation-sections a:focus-visible{
     color: #fff;
     background: #344e41;
 }
 
-.prenotazioni-section{
+.reservation-section{
     margin-top: 2rem;
     scroll-margin-top: 7rem;
 }
 
-.prenotazioni-section h2{
+.reservation-section h2{
     margin: 0 0 1rem;
     color: #344e41;
     font-size: 1.5rem;
 }
 
-.prenotazioni-lista{
+.reservation-list{
     display: grid;
     gap: 1rem;
 }
 
-.prenotazioni-empty-state{
-    display: flex;
-    min-height: 11rem;
+.future-reservation-class{
+    display: grid;
+    text-align: left;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 2em;
+    gap: 2em;
+
+}
+
+.reservation-list{
     padding: 2rem;
-    box-sizing: border-box;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     gap: 0.9rem;
     border: 1px solid #d8e5d9;
     border-radius: 1rem;
@@ -1541,66 +1544,58 @@ margin: 0;
     color: #52645a;
     text-align: center;
     box-shadow: 0 8px 22px rgba(29, 65, 41, 0.07);
+    max-height: 16em;
+    overflow-y: auto;
 }
 
-.prenotazioni-empty-state i{
+.reservation-empty-state{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.reservation-empty-state i{
     color: #3b8532;
     font-size: 2rem;
 }
 
-.prenotazioni-empty-state p{
+.reservation-empty-state p{
     margin: 0;
 }
 
-.prenotazioni-empty-state .button-3{
+.reservation-empty-state .button-3{
     display: inline-block;
 }
 
-@media (max-width: 700px){
-    .prenotazioni-page > .navbar > ul{
-        min-height: 4.5rem;
-        margin: 0;
-        padding: 0 4rem 0 1rem;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 1rem;
-        font-size: 0.65em;
-    }
+.reservation-row{
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: 1fr;
+    column-gap: 2em;
+    text-align: left;
+}
 
-    .prenotazioni-page #profile{
-        right: 0.5rem;
-        width: auto;
-        height: auto;
-        margin: 0;
-    }
+#future-sentinel, #past-sentinel{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    height: fit-content;
+}
 
-    .prenotazioni-page .nav-icon-sub-menu{
-        transform: none;
-        right: 0.5rem;
-    }
+#future-sentinel p, #past-sentinel p{
+    font-size: 1.3em;
+    height: fit-content;
+    font-weight: 700;
+    border-bottom: 2px solid #000; 
+    color: #000;
+    margin-bottom: 0;
+}
 
-    #prenotazioni-main{
-        padding: 7rem 1rem 4rem;
-    }
-
-    .prenotazioni-page > footer{
-        height: auto;
-        padding: 2rem 1rem;
-        flex-wrap: wrap;
-        gap: 1.5rem;
-    }
-
-    .prenotazioni-page > footer div{
-        align-self: auto;
-    }
-
-    .prenotazioni-page #footer-useful-links,
-    .prenotazioni-page #footer-useful-links p{
-        align-items: flex-start;
-        line-height: 1.8;
-    }
-
-    .prenotazioni-page #footer-phone-num{
-        align-self: auto;
-    }
+.spinner{
+    border-top-color: #344e41;
+    border-radius: 50%;
+    font-size:  2em;
 }

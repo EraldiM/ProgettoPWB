@@ -20,20 +20,30 @@ const pool = mysql.createPool({
     queueLimit: 0,
 });
 // adding the authentication
-// This function provides an authenitcation method checking the token (if present) provided by the client 
+// This function provides an authentication method checking the token (if present) provided by the client 
 // and if the Token if invalid we redirect him on the login page.
 // The redirect can only be performed on action like, trying to visit profile page while not authenticated.
+
+
+
+//
+function unauthenticateToken(req, res){
+    if (req.path.startsWith("/api/")){
+        return res.status(401).json({error: "Sessione scaduta"});
+    }
+    return res.redirect(302, "/public/new_login.html");
+}
+
 function authenticateToken(req, res, next){
     const token = req.cookies.token;
-    if (!token){ // if the user is not authenitcated we redirect him on the login page
-        return res.redirect(302, "/public/new_login.html");
+    if (!token){ // if the user is not authenticated we redirect him on the login page
+        return unauthenticateToken(req, res);
     }
     try {
-        const payload = jwt.verify(token, JWT_SECRET);
-        req.user = payload;
+        req.user = jwt.verify(token, JWT_SECRET);
         next();
     } catch (error) {
-        return res.redirect(302, "/public/new_login.html");
+        return unauthenticateToken(req, res);
     }
 }
 
@@ -733,6 +743,148 @@ app.post("/api/booking", authenticateToken, async (req, res) =>{
     } catch (error) {
         console.log(error);
         res.status(500).json({error: error.message});
+    }
+});
+
+
+// *******************************************
+//
+// This section covers reservation.html routes
+//
+// *******************************************
+
+app.get("/api/get-past-and-future-reservation", authenticateToken, async (req, res) => {
+    const user_id = req.user.userID;
+    if (!user_id) { res.status(401).json({error: "Utente non autorizzato"}); }
+
+    const queryFuture = `
+        SELECT
+            b.id,
+            b.coach_id,
+            b.start_at,
+            b.end_at,
+            b.status,
+            c.name AS coach_name,
+            c.last_name AS coach_last_name
+        FROM bookings AS b
+        INNER JOIN coaches AS c ON c.id = b.coach_id
+        WHERE b.user_id = ? AND b.start_at > NOW()
+        ORDER BY b.start_at ASC, b.id ASC
+        LIMIT 5;`
+    ;
+    const queryPast= `
+        SELECT
+            b.id,
+            b.coach_id,
+            b.start_at,
+            b.end_at,
+            b.status,
+            c.name AS coach_name,
+            c.last_name AS coach_last_name,
+            r.booking_id AS reviewed_booking_id
+        FROM bookings AS b
+        INNER JOIN coaches AS c ON c.id = b.coach_id
+        LEFT JOIN reviews AS r ON r.booking_id = b.id
+        WHERE b.user_id = ? AND b.start_at <= NOW()
+        ORDER BY b.start_at DESC, b.id DESC
+        LIMIT 5;`
+    ;
+
+    try {
+
+        const [futureReservations] = await pool.promise().execute(queryFuture, [user_id]);
+        const [pastReservations] = await pool.promise().execute(queryPast, [user_id]);
+
+        res.json({
+            pr: pastReservations,
+            fr: futureReservations
+        });
+        
+    } catch (error) {
+        console.log("Error: ", error);
+        return res.status(400).json({error: error});
+    }
+});
+
+app.get("/api/get-more-future-reservation", authenticateToken, async (req, res) =>{
+    const reservationId = req.query.reservationId;
+    const reservationDate = req.query.reservationDate;
+    let id = req.user.userID;
+    console.log(req.query, id);
+
+    if (!id || !reservationId || !reservationDate) {
+        return res.status(400).json({error: "Errore, formato non valido"});
+    }
+
+    const query = ` SELECT
+            b.id,
+            b.coach_id,
+            b.start_at,
+            b.end_at,
+            b.status,
+            c.name AS coach_name,
+            c.last_name AS coach_last_name
+        FROM bookings AS b
+        INNER JOIN coaches AS c ON c.id = b.coach_id
+        WHERE b.user_id = ? AND (b.start_at > ?
+            OR (b.start_at = ? AND b.id > ?)
+        )
+        ORDER BY b.start_at ASC, b.id ASC
+        LIMIT 5;
+    `;
+
+    try {
+        
+        const [reservations] = await pool.promise().execute(query, [id, reservationDate, reservationDate, reservationId]);
+
+        console.log(reservations);
+
+        res.status(200).json(reservations);
+        
+    } catch (error) {
+        console.log("Error:", error);
+        return res.status(400).json({errore: error});
+    }
+});
+
+app.get("/api/get-more-past-reservation", authenticateToken, async (req, res) =>{
+    const reservationId = req.query.reservationId;
+    const reservationDate = req.query.reservationDate;
+    let id = req.user.userID;
+    console.log(req.query, id);
+
+    if (!id || !reservationId || !reservationDate) {
+        return res.status(400).json({error: "Errore, formato non valido"});
+    }
+
+    const query = ` SELECT
+            b.id,
+            b.coach_id,
+            b.start_at,
+            b.end_at,
+            b.status,
+            c.name AS coach_name,
+            c.last_name AS coach_last_name
+        FROM bookings AS b
+        INNER JOIN coaches AS c ON c.id = b.coach_id
+        WHERE b.user_id = ? 
+            AND (b.start_at < ? OR (b.start_at = ? AND b.id < ?)
+            )
+        ORDER BY b.start_at DESC, b.id DESC 
+        LIMIT 5;
+    `;
+
+    try {
+        
+        const [reservations] = await pool.promise().execute(query, [id, reservationDate, reservationDate, reservationId]);
+
+        console.log(reservations);
+
+        res.status(200).json(reservations);
+        
+    } catch (error) {
+        
+        console.log("Error:", error);
     }
 });
 
