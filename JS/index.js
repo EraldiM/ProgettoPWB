@@ -5,7 +5,7 @@ function addCoachCardToMapDiv(name, disciplines, id, parentDiv){
     let anchor = document.createElement("a");
     let param = new URLSearchParams({coach_id: id})
     console.log(id);
-    anchor.href = `/public/coach?${param}`;
+    anchor.href = `/public/new_coach.html?${param}`;
     let span_a = document.createElement("span");
     anchor.appendChild(span_a);
     span_a.textContent = name;

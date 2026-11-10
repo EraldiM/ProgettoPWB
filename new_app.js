@@ -19,14 +19,11 @@ const pool = mysql.createPool({
     waitForConnections: true,
     queueLimit: 0,
 });
+
 // adding the authentication
 // This function provides an authentication method checking the token (if present) provided by the client 
 // and if the Token if invalid we redirect him on the login page.
 // The redirect can only be performed on action like, trying to visit profile page while not authenticated.
-
-
-
-//
 function unauthenticateToken(req, res){
     if (req.path.startsWith("/api/")){
         return res.status(401).json({error: "Sessione scaduta"});
@@ -165,7 +162,6 @@ app.get("/api/region-coaches", async (req, res) =>{
 });
 
 // ************************************
-//
 // This section covers login.html routes
 //
 // ************************************
@@ -761,9 +757,10 @@ app.get("/api/get-past-and-future-reservation", authenticateToken, async (req, r
         SELECT
             b.id,
             b.coach_id,
-            b.start_at,
-            b.end_at,
+            DATE_FORMAT(b.start_at, '%Y-%m-%dT%H:%i:%s') AS start_at,
+            DATE_FORMAT(b.end_at, '%Y-%m-%dT%H:%i:%s') AS end_at,
             b.status,
+            DATE_FORMAT(b.start_at, '%Y-%m-%d %H:%i:%s') AS cursor_start_at,
             c.name AS coach_name,
             c.last_name AS coach_last_name
         FROM bookings AS b
@@ -776,9 +773,10 @@ app.get("/api/get-past-and-future-reservation", authenticateToken, async (req, r
         SELECT
             b.id,
             b.coach_id,
-            b.start_at,
-            b.end_at,
+            DATE_FORMAT(b.start_at, '%Y-%m-%dT%H:%i:%s') AS start_at,
+            DATE_FORMAT(b.end_at, '%Y-%m-%dT%H:%i:%s') AS end_at,
             b.status,
+            DATE_FORMAT(b.start_at, '%Y-%m-%d %H:%i:%s') AS cursor_start_at,
             c.name AS coach_name,
             c.last_name AS coach_last_name,
             r.booking_id AS reviewed_booking_id
@@ -819,9 +817,10 @@ app.get("/api/get-more-future-reservation", authenticateToken, async (req, res) 
     const query = ` SELECT
             b.id,
             b.coach_id,
-            b.start_at,
-            b.end_at,
+            DATE_FORMAT(b.start_at, '%Y-%m-%dT%H:%i:%s') AS start_at,
+            DATE_FORMAT(b.end_at, '%Y-%m-%dT%H:%i:%s') AS end_at,
             b.status,
+            DATE_FORMAT(b.start_at, '%Y-%m-%d %H:%i:%s') AS cursor_start_at,
             c.name AS coach_name,
             c.last_name AS coach_last_name
         FROM bookings AS b
@@ -860,13 +859,16 @@ app.get("/api/get-more-past-reservation", authenticateToken, async (req, res) =>
     const query = ` SELECT
             b.id,
             b.coach_id,
-            b.start_at,
-            b.end_at,
+            DATE_FORMAT(b.start_at, '%Y-%m-%dT%H:%i:%s') AS start_at,
+            DATE_FORMAT(b.end_at, '%Y-%m-%dT%H:%i:%s') AS end_at,
             b.status,
+            DATE_FORMAT(b.start_at, '%Y-%m-%d %H:%i:%s') AS cursor_start_at,
             c.name AS coach_name,
-            c.last_name AS coach_last_name
+            c.last_name AS coach_last_name,
+            r.booking_id AS reviewed_booking_id
         FROM bookings AS b
         INNER JOIN coaches AS c ON c.id = b.coach_id
+        LEFT JOIN reviews AS r ON r.booking_id = b.id
         WHERE b.user_id = ? 
             AND (b.start_at < ? OR (b.start_at = ? AND b.id < ?)
             )
@@ -883,8 +885,66 @@ app.get("/api/get-more-past-reservation", authenticateToken, async (req, res) =>
         res.status(200).json(reservations);
         
     } catch (error) {
-        
         console.log("Error:", error);
+        return res.status(500).json({error: "Impossibile caricare altre prenotazioni"});
+    }
+});
+
+app.post("/api/post-review", authenticateToken, async (req, res)=>{
+    const {id, rating, review} = req.body;
+    const userId = req.user.userID;
+
+    if(!id || rating > 5 || rating < 1) return res.status(400).json({error: "Dati inseriti non validi"});
+
+    try {
+        const query = `
+            INSERT INTO reviews (booking_id, rating, review)
+            SELECT b.id, ?, ?
+            FROM bookings AS b
+            WHERE b.id = ?
+                AND b.user_id = ?
+                AND b.status = 'completed'
+        `;
+
+        const [reviewState] = await pool.promise().execute(query, [rating, review, id, userId]);
+        console.log(reviewState);
+
+        if (reviewState.affectedRows === 0) {
+            return res.status(404).json({
+                error: "Prenotazione non trovata o non accessibile"
+            });
+        }
+        return res.status(200).json({success: true});
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(409).json({error: "Aggiornare la pagina"});
+    }
+});
+
+app.patch("/api/cancel-reservation",authenticateToken, async (req, res)=>{
+    const id = req.query.id;
+    const userId = req.user.userID;
+    try {
+        const query = `
+            UPDATE bookings 
+            SET status='cancelled'
+            WHERE id=? AND
+            user_id = ? AND 
+            status IN ('pending', 'confirmed')
+            AND start_at > NOW();
+        `        
+        const [reviewState] = await pool.promise().execute(query, [id, userId]);
+
+        if (reviewState.affectedRows === 0) {
+            return res.status(404).json({
+                error: "Prenotazione non trovata o non cancellabile"
+            });
+        }
+        res.status(200).json({success: true});
+        
+    } catch (error) {
+        res.status(400).json({error: error});
     }
 });
 

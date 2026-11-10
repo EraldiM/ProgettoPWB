@@ -63,6 +63,35 @@
                     <div id="past-sentinel"></div>
                 </div>
             </section>
+            <dialog id="review-dialog">
+                <form id="review-form">
+                    <h2>Recensisci la visita</h2>
+
+                    <label for="review-rating">Valutazione</label>
+                    <p>
+                        <span class="star" id="star-1"><i class="far fa-star"></i></span>
+                        <span class="star" id="star-2"><i class="far fa-star"></i></span>
+                        <span class="star" id="star-3"><i class="far fa-star"></i></span>
+                        <span class="star" id="star-4"><i class="far fa-star"></i></span>
+                        <span class="star" id="star-5"><i class="far fa-star"></i></span>
+                    </p>    
+                    <label for="review-text">Recensione</label>
+                    <label for="review-text" id="sub-label-review">(falcoltativo)</label>
+                    <textarea id="review-text" name="review" maxlength="1000"></textarea>
+
+                    <p id="review-button-p">
+                        <button type="button" id="close-review-dialog" class="button-3">Annulla</button>
+                        <button type="submit" id="submit-review" class="button-3">Invia</button>
+                    </p>
+                </form>
+            </dialog>
+            <dialog id="cancellation-dialog">
+                <h1>Desideri cancellare la prenotazione?</h1>
+                <p>
+                    <button class="button-3" id="close-cancellation" type="button">Annulla</button>
+                    <button class="button-3" id="submit-cancellation" type="submit">Cancella</button>
+                </p>
+            </dialog>
         </main>
 
         <footer>

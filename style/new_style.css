@@ -1530,6 +1530,7 @@ margin: 0;
     display: grid;
     text-align: left;
     grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
     column-gap: 2em;
     gap: 2em;
 
@@ -1598,4 +1599,118 @@ margin: 0;
     border-top-color: #344e41;
     border-radius: 50%;
     font-size:  2em;
+}
+
+.reservation-status{
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+.review-button{
+    margin-left: 4em;
+    font-size: 1em;
+}
+
+#review-dialog{
+    border: none;
+    border-radius: 30px;
+    height: 30em;
+    width: 50em;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+
+#review-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-items: center;
+    gap: 1em;
+}
+
+
+#review-form label{
+    font-size: 1.3em;
+    font-family: "Manrope", sans-serif;
+    font-weight: 500;
+}
+
+#review-form h2{
+    text-align: center;
+}
+
+.star svg{
+    font-size: 1.6em;
+}
+
+#review-text{
+    width: 50%;
+    height: 15em;
+    font-family: "Manrope", sans-serif;
+    font-size: 1.4em;
+    resize: none;
+}
+
+.gold{
+    color: gold;
+}
+
+.dark-gold{
+    color: #9F7F03
+}
+
+#review-button-p{
+    display: flex;
+    flex-direction: row;
+    gap: 6em;
+}
+
+#review-button-p button{
+    font-size: 1.2em;
+}
+
+#sub-label-review{
+    color: #bbb;
+    font-size: 0.9em !important;
+}
+
+.reservation-status{
+    margin: 0;
+}
+
+.cancel-reservation-button{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    margin-left: 2em;
+    font-size: 1em;
+    height: 2em;
+    width: 2em;
+    background-color: transparent;
+    border-radius: 50%;
+    padding: 1.5em;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+.cancel-reservation-button:hover{
+   background-color: rgba(58, 90, 64, 1);
+   color: #fff;
+}
+
+#cancellation-dialog{
+    border: none;
+    border-radius: 30px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+    padding: 1em 2em;
+}
+
+#cancellation-dialog p{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 2em;
 }
