@@ -1,9 +1,10 @@
 let last_coach_id;
 let last_coach_name = '';
 const discipline_list = document.getElementById("discipline-list");
-const discipline_summary = [];
+const region_list = document.getElementById("region-list");
 // this variable represents the discipline that the user has selected, by the fault its value false, a state that represents all possible disciplines.
 let tag_selected = ''; 
+let region_selected = '';
 const notFound = document.querySelector(".not-found");
 
 function createPopup(){
@@ -80,12 +81,29 @@ window.addEventListener("load", async function(){
     const res = await data.json();
     
     res.forEach(ele=> {
-        let discipline = document.createElement("li");
+        let discipline = document.createElement("option");
+        discipline.value = ele.category_name;
         discipline.textContent = ele.category_name;
-        discipline.classList.add("discipline");
         discipline_list.appendChild(discipline);
-        discipline_summary.push(ele.category_name);
     });
+});
+
+window.addEventListener("load", async function(){
+    try {
+        const data = await fetch("/api/regions");
+        if (!data.ok) throw new Error("Impossibile caricare le regioni");
+
+        const res = await data.json();
+        res.forEach(ele => {
+            let region = document.createElement("option");
+            region.value = ele.region;
+            region.textContent = ele.region;
+            region_list.appendChild(region);
+        });
+    } catch (error) {
+        console.log("Error:" + error);
+        setPopUp("Regioni non caricate", "Riprova a caricare la pagina", document.getElementById("explore-div"));
+    }
 });
 
 window.addEventListener("load", async function(){
@@ -99,39 +117,13 @@ window.addEventListener("load", async function(){
     last_coach_id = res[res.length - 1].id;
 });
 
-const icon = document.getElementById("triangle");
-const button = document.getElementById("filter-discipline-button");
-const disciplineList = document.getElementById("discipline-list");
-
-document.getElementById("filter-discipline-button").addEventListener("click", async function(){
-    icon.classList.toggle("triangle-trans");
-    disciplineList.classList.toggle("hidden");
-    disciplineList.classList.toggle("open");
-});
-
-document.getElementById("discipline-list").addEventListener("click", function(event){
-    icon.classList.remove("triangle-trans");
-    disciplineList.classList.add("hidden");
-    disciplineList.classList.remove("open");
-    let discipline_selected = event.target.closest(".discipline");
-    if (!discipline_selected){return};
-    document.getElementById("discipline-text").textContent = discipline_selected.textContent;
-});
-
-document.addEventListener("click", function(event){
-    if (!button.contains(event.target) && !disciplineList.contains(event.target)) {
-        icon.classList.remove("triangle-trans");
-        disciplineList.classList.add("hidden");
-        disciplineList.classList.toggle("open");
-    }
-});
-
 document.getElementById("get-more-coaches").addEventListener("click", async function(){
 
     let params = new URLSearchParams({
         coach_id: last_coach_id,
         coach_name: last_coach_name,
-        discipline: tag_selected
+        discipline: tag_selected,
+        region: region_selected
     });
     
     try {
@@ -159,31 +151,35 @@ document.getElementById("get-more-coaches").addEventListener("click", async func
 
 document.getElementById("filter-search-button-coaches").addEventListener("click", async function(){
     const old_tag = tag_selected;
+    const old_region = region_selected;
     const old_last_coach_id = last_coach_id;
     const old_last_coach_name = last_coach_name;
     last_coach_id = 0;
     last_coach_name = document.getElementById("filter-search-coach-name").value || '';
-    const discipline =  discipline_summary.includes(document.getElementById("discipline-text").textContent) ? document.getElementById("discipline-text").textContent : '';
-    tag_selected = discipline;
+    tag_selected = discipline_list.value;
+    region_selected = region_list.value;
 
     const params = new URLSearchParams({
         coach_id: 0,
         coach_name: last_coach_name,
-        discipline: tag_selected
+        discipline: tag_selected,
+        region: region_selected
     });
 
     try {
         const data = await fetch(`/api/filtered-coach?${params}`,{
             method: 'GET'
         });
+        if (!data.ok) throw new Error("Impossibile cercare i coach");
     
         const res = await data.json();
         if (res.length == 0){
             tag_selected = old_tag;
+            region_selected = old_region;
             last_coach_name = old_last_coach_name;
             last_coach_id = old_last_coach_id;
             let titolo = "Nessun coach trovato.";
-            let descrizione = "Provare un altro nome o un altra disciplina."
+            let descrizione = "Provare un altro nome, un'altra disciplina o un'altra regione."
             setPopUp(titolo, descrizione, document.getElementById("explore-div"));
             return;
         }
@@ -191,11 +187,16 @@ document.getElementById("filter-search-button-coaches").addEventListener("click"
         const coach_div = document.getElementById("coaches-result");
         coach_div.innerHTML = "";
         res.forEach(ele => {
-            createCoachCard(ele.name + " " + ele.last_name,ele.categories, ele.id)
+            createCoachCard(ele.name + " " + ele.last_name,ele.categories, ele.id, ele.region)
         });
         last_coach_id = res[res.length - 1].id;
          
     } catch (error) {
-
+        tag_selected = old_tag;
+        region_selected = old_region;
+        last_coach_name = old_last_coach_name;
+        last_coach_id = old_last_coach_id;
+        console.log("Error:" + error);
+        setPopUp("Ricerca non riuscita", "Riprova tra poco", document.getElementById("explore-div"));
     }
 });

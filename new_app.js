@@ -464,6 +464,20 @@ app.get("/api/disciplines", async (req, res) =>{
     }
 });
 
+app.get("/api/regions", async (req, res) =>{
+    const query = `SELECT DISTINCT region
+        FROM coaches
+        WHERE region IS NOT NULL AND region <> ''
+        ORDER BY region;`;
+    try {
+        const [regions] = await pool.promise().execute(query);
+        res.json(regions);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({error: "Impossibile caricare le regioni"});
+    }
+});
+
 app.get("/api/coach-list", async (req, res) =>{
     const query = `SELECT
     coaches.id,
@@ -521,11 +535,13 @@ app.get("/GET/more-coaches", async (req, res) => {
                 AND filter_category.category_name = ?
         )
     )
+    AND (? = '' OR coaches.region = ?)
     GROUP BY
     coaches.id,
     coaches.name,
     coaches.last_name,
-    coaches.sex
+    coaches.sex,
+    coaches.region
     ORDER BY coaches.id
     LIMIT 6; `
     ;
@@ -533,8 +549,9 @@ app.get("/GET/more-coaches", async (req, res) => {
     let coach_id = req.query.coach_id;
     let coach_name = req.query.coach_name;
     let discipline_name = req.query.discipline;
+    let region = req.query.region || '';
     try {
-        const row =  await pool.promise().execute(query, [coach_id, coach_name, discipline_name, discipline_name]);
+        const row =  await pool.promise().execute(query, [coach_id, coach_name, discipline_name, discipline_name, region, region]);
 
         const coaches = row[0];
 
@@ -542,7 +559,7 @@ app.get("/GET/more-coaches", async (req, res) => {
 
     } catch (error) {
         console.log("errore del DB: " + error);
-        res.json(error);
+        res.status(500).json({error: "Impossibile caricare altri coach"});
     }
 });
 
@@ -550,12 +567,14 @@ app.get("/api/filtered-coach", async (req, res) => {
     let coach_id = req.query.coach_id;
     let discipline_name = req.query.discipline;
     let coach_name = req.query.coach_name;
+    let region = req.query.region || '';
     // the following line rapresents the two possibile queries we can perform. The user can select a name or not fot the coach. We have a ternary operator that checks if coach_name has been specified.
     const query =` SELECT 
     coaches.id,
     coaches.name,
     coaches.last_name,
     coaches.sex,
+    coaches.region,
     JSON_ARRAYAGG(
       coaches_categories.category_name
       ORDER BY coaches_categories.category_name
@@ -574,23 +593,25 @@ app.get("/api/filtered-coach", async (req, res) => {
                 AND filter_category.category_name = ?
         )
     )
+    AND (? = '' OR coaches.region = ?)
     GROUP BY
     coaches.id,
     coaches.name,
     coaches.last_name,
-    coaches.sex
+    coaches.sex,
+    coaches.region
     ORDER BY coaches.id
     LIMIT 6; `
     ;
     
     try {
-        const row = await pool.promise().execute(query, [coach_id, coach_name, discipline_name, discipline_name]);
+        const row = await pool.promise().execute(query, [coach_id, coach_name, discipline_name, discipline_name, region, region]);
         const coaches = row[0];
 
         res.json(coaches);
     } catch (error) {
         console.log("errore del DB: " + error);
-        res.json(error);
+        res.status(500).json({error: "Impossibile cercare i coach"});
     }
 });
 

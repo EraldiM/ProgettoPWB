@@ -783,12 +783,13 @@ margin: 0;
 }
 
 #filter-div{
-    padding: 5em 0 0 0;
+    padding: 5em 0 4em 0;
     margin: 0 2em;
     display: flex;
     flex-direction: row;
     justify-content: center;
-    gap: 7em;
+    gap: 3em;
+    flex-wrap: wrap;
     align-items: baseline;
     border-bottom: 1px solid #999;
 }
@@ -801,20 +802,29 @@ margin: 0;
     border: 2px solid #ccc;
 }
 
-#filter-discipline-button{
-    background-color: #fff;
-    width: 30em;
+#discipline-container, #region-container{
     position: relative;
-    display: flex;
-    justify-content: center;
-    border: 2px solid #ccc;
-    padding: 0.3em 0.3em;
-    font-family: "Manrope", sans-serif;
-    border-radius: 11px;
 }
 
-#filter-discipline-button span{
-    font-size: 1.3em;
+#discipline-list, #region-list{
+    appearance: none;
+    box-sizing: border-box;
+    background-color: #fff;
+    color: #000;
+    width: 400px;
+    height: 35px;
+    border: 2px solid #ccc;
+    padding: 4px;
+    font-family: "Manrope", sans-serif;
+    font-size: 13pt;
+    border-radius: 11px;
+    text-align: center;
+    text-align-last: center;
+    cursor: pointer;
+}
+
+#region-list{
+    width: 230px;
 }
 
 #filter-search-button-coaches{
@@ -838,37 +848,21 @@ margin: 0;
     text-align: left;
 }
 
-#triangle{
-    display: inline-block; /* Really important: makes the triangle rotate */ padding: 0;
+#triangle, #region-triangle{
+    display: inline-block;
+    padding: 0;
     margin: 0;
     position: absolute;
-    right: 0;
+    right: 2px;
+    top: 50%;
+    font-size: 13pt;
+    transform: translateY(-50%);
     transition: transform 0.3s ease;
+    pointer-events: none;
 }
 
-.triangle-trans{
-    transform: rotate(90deg);
-}
-
-#discipline-list{
-    font-family: "Playfair", sans-serif;
-    margin: 0;
-    padding: 0.3em 0.2em;
-    height: 10em;
-    overflow-y:scroll;
-    border: 2px solid #ccc;
-    list-style: none;
-    width: inherit;
-    border-radius: 11px;
-}
-
-.discipline{
-    cursor: pointer;
-    padding: 0.4em 0.2em;
-}
-
-.discipline:hover {
-    background-color: #ddd;
+#discipline-list:open + #triangle, #region-list:open + #region-triangle{
+    transform: translateY(-50%) rotate(90deg);
 }
 
 #coaches-result{
@@ -958,10 +952,6 @@ margin: 0;
     background-color: #ddd;
     padding: 0.2em 0.3em;
     border-radius: 12px
-}
-
-.discipline{
-    user-select: none;
 }
 
 .coach-card:last-child{

@@ -34,14 +34,17 @@
             <div id="filter-div">
                 <input type="text" name="" value="" id="filter-search-coach-name" placeholder="Nome del Coach.">
                 <div id="discipline-container">
-                    <button type="button" id="filter-discipline-button">
-                        <span id="discipline-text">Disciplina</span>
-                        <span id="triangle"><i class="fa-solid fa-caret-right" ></i></span>
-                    </button>
-                    <ul id="discipline-list" class="hidden" role="listbox">
-                        <li class="discipline">Disciplina</li>
-                    </ul>
+                    <select id="discipline-list" name="discipline" aria-label="Disciplina">
+                        <option value="">Disciplina</option>
+                    </select>
+                    <span id="triangle" aria-hidden="true"><i class="fa-solid fa-caret-right"></i></span>
                 </div>  
+                <div id="region-container">
+                    <select id="region-list" name="region" aria-label="Regione">
+                        <option value="">Regione</option>
+                    </select>
+                    <span id="region-triangle" aria-hidden="true"><i class="fa-solid fa-caret-right"></i></span>
+                </div>
                 <button type="button" id="filter-search-button-coaches">Cerca<i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
         <div id="coaches-result">
