@@ -1,6 +1,4 @@
-import {setPopup} from './notify.js'
-
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+import { setPopup, createSpinner, sleep } from "./utils.js";
 const mainDiv = document.getElementById("reservation-main-div");
 const frd = document.getElementById("future-reservation-div");
 const futureSentinel = document.getElementById("future-sentinel");
@@ -27,18 +25,6 @@ let selectedReviewBtn = null;
 let selectedCancellationButton = null;
 let selectedReservationStatus = null;
 let ratingSelected = 0;
-
-function createSpinner(){
-    const wrapper = document.createElement("span");
-    wrapper.classList.add("spinner");
-    const spinner = document.createElement("i");
-    spinner.classList.add("fas", "fa-spinner", "fa-spin");
-    spinner.setAttribute("role", "status");
-
-    wrapper.appendChild(spinner);
-    return wrapper;
-
-}
 
 async function renderFutureReservation(reservation){
 

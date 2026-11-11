@@ -1,4 +1,4 @@
-import { setPopup } from "./notify.js";
+import { setPopup } from "./utils.js";
 
 // Parametri della pagina e riferimenti agli elementi già presenti nell'HTML.
 const pagaParams = new URLSearchParams(window.location.search);

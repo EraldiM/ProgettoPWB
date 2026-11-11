@@ -1,5 +1,4 @@
-// With this methos we can call sleep as a function
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+import { sleep } from "./utils.js";
 const d = document;
 
 window.addEventListener("load", async ()=>{

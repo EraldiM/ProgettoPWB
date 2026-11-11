@@ -1,4 +1,14 @@
 
+import { createSpinner, sleep } from "./utils.js";
+
+const mapCoachRes = document.getElementById("map-coach-res");
+const mapCoachSentinel = document.getElementById("map-coach-sentinel");
+let selectedMapRegion;
+let lastMapCoachId = 0;
+let loadingMapCoaches = false;
+let hasMoreMapCoaches = false;
+let mapCoachRequest;
+
 function addCoachCardToMapDiv(name, disciplines, id, parentDiv){
     let coach_card_div = document.createElement("div");
     coach_card_div.classList.add("home-region-coach-card");
@@ -19,7 +29,7 @@ function addCoachCardToMapDiv(name, disciplines, id, parentDiv){
         disciplines_p.appendChild(discipline_span);
     });
     coach_card_div.appendChild(disciplines_p);
-    parentDiv.appendChild(coach_card_div);
+    parentDiv.insertBefore(coach_card_div, mapCoachSentinel);
     return;
 }
 
@@ -54,28 +64,81 @@ document.querySelectorAll(".div-image-container").forEach((container) =>{
     });
 })
 
-// This function Handles clicks on states map
-// This function is provided by countrymap.js
+async function loadMoreMapCoaches(){
+    if (loadingMapCoaches || !hasMoreMapCoaches || !selectedMapRegion) return;
 
-simplemaps_countrymap.hooks.preclick_state = async function (id, event) {
-    const region = simplemaps_countrymap_mapdata.state_specific[id]?.name;
-    let coach_div_container = document.getElementById("map-coach-res");
-    let param = new URLSearchParams({region})
-    console.log(param);
+    loadingMapCoaches = true;
+    mapCoachObserver.unobserve(mapCoachSentinel);
+    const request = new AbortController();
+    mapCoachRequest = request;
+
+    const spinner = createSpinner("Caricamento coach");
+    mapCoachSentinel.appendChild(spinner);
+
+    const params = new URLSearchParams({
+        region: selectedMapRegion,
+        coach_id: lastMapCoachId
+    });
+
     try {
-        const res = await fetch(`/api/region-coaches?${param}`);
+        const [res] = await Promise.all([
+            fetch(`/api/region-coaches?${params}`, {signal: request.signal}),
+            sleep(1000)
+        ]);
+        if (!res.ok) throw new Error("Impossibile caricare i coach");
 
         const data = await res.json();
-        console.log(data);
+        if (request.signal.aborted) return;
 
-        coach_div_container.innerHTML = '';
         data.forEach((coach) =>{
-            addCoachCardToMapDiv(`${coach.name} ${coach.last_name}`, coach.categories, coach.id, coach_div_container);
+            addCoachCardToMapDiv(`${coach.name} ${coach.last_name}`, coach.categories, coach.id, mapCoachRes);
         });
 
+        if (data.length > 0) lastMapCoachId = data[data.length - 1].id;
+
+        if (data.length < 5){
+            hasMoreMapCoaches = false;
+            const noMoreCoaches = document.createElement("p");
+            noMoreCoaches.textContent = "Nessun altro coach è stato trovato";
+            mapCoachSentinel.appendChild(noMoreCoaches);
+        }
     } catch (error) {
+        if (request.signal.aborted) return;
+        hasMoreMapCoaches = false;
         console.log("Error:", error);
+        const errorMessage = document.createElement("p");
+        errorMessage.textContent = "Impossibile caricare i coach. Seleziona di nuovo la regione per riprovare.";
+        mapCoachSentinel.appendChild(errorMessage);
+    } finally {
+        spinner.remove();
+        if (mapCoachRequest === request){
+            loadingMapCoaches = false;
+            if (hasMoreMapCoaches) mapCoachObserver.observe(mapCoachSentinel);
+        }
     }
+}
+
+const mapCoachObserver = new IntersectionObserver((entries) =>{
+    if (entries[0].isIntersecting) loadMoreMapCoaches();
+},{
+    root: mapCoachRes,
+    rootMargin: "0px 0px 0px 0px"
+});
+
+// This function handles clicks on states and is provided by countrymap.js.
+simplemaps_countrymap.hooks.preclick_state = async function (id, event) {
+    const region = simplemaps_countrymap_mapdata.state_specific[id]?.name;
+    if (!region) return;
+
+    mapCoachRequest?.abort();
+    mapCoachObserver.disconnect();
+    selectedMapRegion = region;
+    lastMapCoachId = 0;
+    loadingMapCoaches = false;
+    hasMoreMapCoaches = true;
+    mapCoachSentinel.replaceChildren();
+    mapCoachRes.replaceChildren(mapCoachSentinel);
+    mapCoachRes.scrollTop = 0;
+
+    await loadMoreMapCoaches();
 };
-
-

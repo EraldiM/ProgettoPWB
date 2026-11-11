@@ -1,3 +1,5 @@
+import { setPopup } from "./utils.js";
+
 let last_coach_id;
 let last_coach_name = '';
 const discipline_list = document.getElementById("discipline-list");
@@ -6,43 +8,6 @@ const region_list = document.getElementById("region-list");
 let tag_selected = ''; 
 let region_selected = '';
 const notFound = document.querySelector(".not-found");
-
-function createPopup(){
-    let popupDiv = document.createElement("div");
-    popupDiv.classList.add("pop-up");
-    // We make sure that the browser first render the pop-up and then we give to then div the other class.
-    requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-            popupDiv.classList.add("pop-up-transform"); 
-
-            setTimeout(() => {
-                popupDiv.addEventListener("transitionend", () => {
-                    popupDiv.remove(); // Rimosso dopo la risalita
-              }, { once: true });
-
-              popupDiv.classList.remove("pop-up-transform"); // Risale
-        }, 3000);
-    });
-});
-    return popupDiv;
-}
-
-function removePopup(popUp){
-    popUp.remove();
-}
-
-function setPopUp(titleText, paragraphText, containerToAppend){
-    if(document.querySelector(".pop-up")){return;}
-    let popUp = createPopup();
-    let title = document.createElement("h1");
-    title.textContent = titleText;
-    let paragraph = document.createElement("p");
-    paragraph.textContent = paragraphText;
-    popUp.appendChild(title);
-    popUp.appendChild(paragraph);
-    containerToAppend.insertBefore(popUp, containerToAppend.firstChild);
-
-}
 
 function createCoachCard(fullName, disciplines, id, region){
     const coach_div = document.getElementById("coaches-result");
@@ -56,10 +21,10 @@ function createCoachCard(fullName, disciplines, id, region){
     const param = new URLSearchParams({
         coach_id: id
     });
-    coach_container_a = document.createElement("a");
+    let coach_container_a = document.createElement("a");
     coach_container_a.classList.add("coach-card-anchor");
     coach_container_a.href = `/public/new_coach.html?${param}`;
-    coach_container = document.createElement("div");
+    let coach_container = document.createElement("div");
     name_last_name.textContent = fullName;
     coach_container.classList.add("coach-card");
     coach_container_a.appendChild(coach_container);
@@ -67,7 +32,7 @@ function createCoachCard(fullName, disciplines, id, region){
     coach_container.append(name_last_name);
     coach_container.appendChild(region_p);
     disciplines.forEach(category => {
-        categoryDOM = document.createElement("span");
+        let categoryDOM = document.createElement("span");
         categoryDOM.classList.add("discipline-tag");
         categoryDOM.textContent = category;
         discipline_container.appendChild(categoryDOM);
@@ -102,7 +67,7 @@ window.addEventListener("load", async function(){
         });
     } catch (error) {
         console.log("Error:" + error);
-        setPopUp("Regioni non caricate", "Riprova a caricare la pagina", document.getElementById("explore-div"));
+        setPopup("Regioni non caricate", "Riprova a caricare la pagina", document.getElementById("explore-div"));
     }
 });
 
@@ -136,7 +101,7 @@ document.getElementById("get-more-coaches").addEventListener("click", async func
         if (res.length == 0){
             let title = "Nessun altro coach è stato trovato";
             let description = "" ;
-            setPopUp(title, description, document.getElementById("explore-div"));
+            setPopup(title, description, document.getElementById("explore-div"));
             return;
         }
         res.forEach(ele => {
@@ -180,7 +145,7 @@ document.getElementById("filter-search-button-coaches").addEventListener("click"
             last_coach_id = old_last_coach_id;
             let titolo = "Nessun coach trovato.";
             let descrizione = "Provare un altro nome, un'altra disciplina o un'altra regione."
-            setPopUp(titolo, descrizione, document.getElementById("explore-div"));
+            setPopup(titolo, descrizione, document.getElementById("explore-div"));
             return;
         }
 
@@ -197,6 +162,6 @@ document.getElementById("filter-search-button-coaches").addEventListener("click"
         last_coach_name = old_last_coach_name;
         last_coach_id = old_last_coach_id;
         console.log("Error:" + error);
-        setPopUp("Ricerca non riuscita", "Riprova tra poco", document.getElementById("explore-div"));
+        setPopup("Ricerca non riuscita", "Riprova tra poco", document.getElementById("explore-div"));
     }
 });

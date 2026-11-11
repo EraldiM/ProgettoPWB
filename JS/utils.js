@@ -1,4 +1,18 @@
 
+export const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+export function createSpinner(label = "Caricamento"){
+    const wrapper = document.createElement("span");
+    wrapper.classList.add("spinner");
+    wrapper.setAttribute("role", "status");
+    wrapper.setAttribute("aria-label", label);
+    const spinner = document.createElement("i");
+    spinner.classList.add("fas", "fa-spinner", "fa-spin");
+    spinner.setAttribute("aria-hidden", "true");
+    wrapper.appendChild(spinner);
+    return wrapper;
+}
+
 export function createPopup(){
     let popupDiv = document.createElement("div");
     popupDiv.classList.add("pop-up");
@@ -10,12 +24,12 @@ export function createPopup(){
             setTimeout(() => {
                 popupDiv.addEventListener("transitionend", () => {
                     popupDiv.remove(); // Rimosso dopo la risalita
-              }, { once: true });
+                }, { once: true });
 
-              popupDiv.classList.remove("pop-up-transform"); // Risale
-        }, 3000);
+                popupDiv.classList.remove("pop-up-transform"); // Risale
+            }, 3000);
+        });
     });
-});
     return popupDiv;
 }
 

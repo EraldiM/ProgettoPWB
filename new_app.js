@@ -128,6 +128,11 @@ app.post("/api/logout", (req, res) =>{
 
 app.get("/api/region-coaches", async (req, res) =>{
     const region = req.query.region;
+    const coach_id = Number(req.query.coach_id || 0);
+
+    if (typeof region !== "string" || !region.trim() || !Number.isSafeInteger(coach_id) || coach_id < 0){
+        return res.status(400).json({error: "Parametri non validi"});
+    }
 
     const query = `SELECT
     coaches.id,
@@ -142,15 +147,17 @@ app.get("/api/region-coaches", async (req, res) =>{
     INNER JOIN coaches_categories
         ON coaches.id = coaches_categories.id_coach
     WHERE coaches.region = ?
+    AND coaches.id > ?
     GROUP BY
         coaches.id,
         coaches.name,
         coaches.last_name,
         coaches.sex
-    ORDER BY coaches.id;`
+    ORDER BY coaches.id
+    LIMIT 5;`
 
     try {
-        const row = await pool.promise().execute(query, [region]);
+        const row = await pool.promise().execute(query, [region, coach_id]);
         let coaches = row[0];
         // console.log(coaches);
 

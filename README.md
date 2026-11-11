@@ -36,7 +36,7 @@ The structure of the project can be represented as follows:
 │   ├── coach.js
 │   ├── explore.js
 │   ├── login.js
-│   ├── notify.js
+│   ├── utils.js
 │   ├── profile.js
 │   ├── script.js
 │   └── signup.js
