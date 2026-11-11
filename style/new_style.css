@@ -1302,27 +1302,19 @@ margin: 0;
     margin-bottom: 3em;
 }
 
-#overlay{
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    inset: 0;
-    z-index: 11;
-    opacity: 0.33;
-    filter: blur(10px);
-    background-color: black;
-}
-
 #booking-div{
-    z-index: 12;
-    position: absolute;
-    margin-top: 10em;
-    width: 70em;
-    height: 55em;
+    border: none;
+    padding: 0;
+    width: min(70em, calc(100vw - 2em));
+    height: min(55em, calc(100vh - 2em));
+    box-sizing: border-box;
     background-color: white;
     border-radius: 3em;
-    /* border: 1px solid #344e41; */
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+#booking-div::backdrop{
+    background-color: rgba(0, 0, 0, 0.33);
 }
 
 #close-booking-button{

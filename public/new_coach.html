@@ -33,9 +33,8 @@
 
         <main>
             <div id="coach-main-div">
-                <div id="overlay" class="hidden"></div>
-                <div id="booking-div" class="hidden">
-                    <button id="close-booking-button" type="button"><i class="fas fa-times" ></i></button>
+                <dialog id="booking-div" aria-label="Prenota un incontro">
+                    <button id="close-booking-button" type="button" aria-label="Chiudi prenotazione"><i class="fas fa-times" aria-hidden="true"></i></button>
                     <h1>Scegli la settimana dell'incontro</h1>
                     <div class="week">
                         <button type="button" id="booking-left-arrow"><i class="fas fa-long-arrow-alt-left"></i></button>
@@ -78,18 +77,18 @@
                             <input type="radio" id="domenica" name="day" value="7">
                             <label for="domenica">Domenica</label>
                         </span>
-                        </div>
-                        <h1>Seleziona l'orario per l'incontro</h1>
-
-                        <div class="time-slot-div"></div>
-                        <div id="selected-day-div">
-                           <span id="selected-day-span"></span>
-                        </div>
-                        <div id="booking-response-div"></div>
-                        <div id="date-book-button-div">
-                            <input type="button" name="book-date" class="button-3 hidden2" value="Prenota" id="date-book-button">
                     </div>
-                </div>
+                    <h1>Seleziona l'orario per l'incontro</h1>
+
+                    <div class="time-slot-div"></div>
+                    <div id="selected-day-div">
+                        <span id="selected-day-span"></span>
+                    </div>
+                    <div id="booking-response-div"></div>
+                    <div id="date-book-button-div">
+                        <input type="button" name="book-date" class="button-3 hidden2" value="Prenota" id="date-book-button">
+                    </div>
+                </dialog>
                 <h1 id="coach-page-title">Benvenuto nella pagina del coach</h1>
                 <div id="coach-card-div">
                     <div id="coach-card-grid-div">

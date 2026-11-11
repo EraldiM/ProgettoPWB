@@ -334,7 +334,7 @@ async function updateAvailability(startDate, endDate) {
             return;
         }
         console.error("Errore:", error);
-        setPopup("Disponibilità non caricate", "Riprova a selezionare la settimana", document.getElementById("coach-main-div"));
+        setPopup("Disponibilità non caricate", "Riprova a selezionare la settimana", bookingDiv);
     }
 }
 
@@ -423,7 +423,7 @@ async function bookAppointment() {
             return;
         }
         if (res.status === 409) {
-            setPopup("Orario già prenotato", "Provare a scegliere un altro orario", document.getElementById("coach-main-div"));
+            setPopup("Orario già prenotato", "Provare a scegliere un altro orario", bookingDiv);
             await updateWeekAvailability();
             return;
         }
@@ -440,7 +440,7 @@ async function bookAppointment() {
         }
     } catch (error) {
         console.error("Errore:", error);
-        setPopup("Prenotazione non riuscita", "Riprova tra poco", document.getElementById("coach-main-div"));
+        setPopup("Prenotazione non riuscita", "Riprova tra poco", bookingDiv);
     } finally {
         bookButton.disabled = false;
     }
@@ -450,19 +450,14 @@ async function bookAppointment() {
 window.addEventListener("load", loadCoach);
 window.addEventListener("load", loadCoachReviews);
 
-document.getElementById("button-booking-options").addEventListener("click", () => {
-    const overlay = document.getElementById("overlay");
-    overlay.classList.remove("hidden");
-    const book_div = document.getElementById("booking-div");
-    book_div.classList.remove("hidden");
-
+bookOptionButton.addEventListener("click", () => {
+    bookingDiv.showModal();
     date2 = getLastMon();
     updateWeekAvailability();
 });
 
 document.getElementById("close-booking-button").addEventListener("click", () => {
-    document.getElementById("overlay").classList.add("hidden");
-    document.getElementById("booking-div").classList.add("hidden");
+    bookingDiv.close();
 });
 
 leftArrow.addEventListener("click", () => {
@@ -504,9 +499,11 @@ time_container.addEventListener("change", event => {
 
 bookButton.addEventListener("click", bookAppointment);
 
-document.addEventListener("click", function(event){
-    if (!bookingDiv.contains(event.target) && !bookOptionButton.contains(event.target)){
-        document.getElementById("overlay").classList.add("hidden");
-        document.getElementById("booking-div").classList.add("hidden");
+bookingDiv.addEventListener("click", event => {
+    if (event.target !== bookingDiv) return;
+    const rect = bookingDiv.getBoundingClientRect();
+    if (event.clientX < rect.left || event.clientX > rect.right ||
+        event.clientY < rect.top || event.clientY > rect.bottom) {
+        bookingDiv.close();
     }
 });
