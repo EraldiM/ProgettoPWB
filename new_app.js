@@ -489,7 +489,6 @@ app.get("/api/coach-list", async (req, res) =>{
         const row = await pool.promise().execute(query);
         const coaches = row[0];
 
-        console.log(coaches);
         res.json(coaches);
     } catch (error) {
         console.log(error);
@@ -538,7 +537,6 @@ app.get("/GET/more-coaches", async (req, res) => {
         const row =  await pool.promise().execute(query, [coach_id, coach_name, discipline_name, discipline_name]);
 
         const coaches = row[0];
-        console.log(coaches);
 
         res.json(coaches);
 
@@ -586,10 +584,8 @@ app.get("/api/filtered-coach", async (req, res) => {
     ;
     
     try {
-        console.log(query);
         const row = await pool.promise().execute(query, [coach_id, coach_name, discipline_name, discipline_name]);
         const coaches = row[0];
-        console.log(coach_id, coach_name, discipline_name);
 
         res.json(coaches);
     } catch (error) {
@@ -637,6 +633,44 @@ app.get("/api/coach-info", async (req, res) =>{
 
     } catch (error) {
         console.log("Errore zio can: " + error);
+    }
+});
+
+app.get("/api/coach-reviews", async (req, res) =>{
+    const coach_id = req.query.coach_id;
+    if (!coach_id || !/^[1-9]\d*$/.test(coach_id)) {
+        return res.status(400).json({error: "Coach non valido"});
+    }
+
+    const summaryQuery = `
+        SELECT COUNT(*) AS total_reviews, ROUND(AVG(r.rating), 1) AS average_rating
+        FROM reviews AS r
+        INNER JOIN bookings AS b ON b.id = r.booking_id
+        WHERE b.coach_id = ?;
+    `;
+    const reviewsQuery = `
+        SELECT u.user_name, r.rating, r.review,
+            DATE_FORMAT(b.start_at, '%Y-%m-%d %H:%i') AS meeting_date
+        FROM reviews AS r
+        INNER JOIN bookings AS b ON b.id = r.booking_id
+        INNER JOIN utenti3 AS u ON u.id = b.user_id
+        WHERE b.coach_id = ?
+        ORDER BY r.rating DESC, r.creation_date DESC, r.booking_id DESC
+        LIMIT 10;
+    `;
+
+    try {
+        const [summaryRows] = await pool.promise().execute(summaryQuery, [coach_id]);
+        const [reviews] = await pool.promise().execute(reviewsQuery, [coach_id]);
+
+        return res.status(200).json({
+            totalReviews: Number(summaryRows[0].total_reviews),
+            averageRating: Number(summaryRows[0].average_rating),
+            reviews
+        });
+    } catch (error) {
+        console.error("Errore nel caricamento delle recensioni:", error);
+        return res.status(500).json({error: "Impossibile caricare le recensioni"});
     }
 });
 
@@ -808,7 +842,6 @@ app.get("/api/get-more-future-reservation", authenticateToken, async (req, res) 
     const reservationId = req.query.reservationId;
     const reservationDate = req.query.reservationDate;
     let id = req.user.userID;
-    console.log(req.query, id);
 
     if (!id || !reservationId || !reservationDate) {
         return res.status(400).json({error: "Errore, formato non valido"});
@@ -836,7 +869,6 @@ app.get("/api/get-more-future-reservation", authenticateToken, async (req, res) 
         
         const [reservations] = await pool.promise().execute(query, [id, reservationDate, reservationDate, reservationId]);
 
-        console.log(reservations);
 
         res.status(200).json(reservations);
         
@@ -850,7 +882,6 @@ app.get("/api/get-more-past-reservation", authenticateToken, async (req, res) =>
     const reservationId = req.query.reservationId;
     const reservationDate = req.query.reservationDate;
     let id = req.user.userID;
-    console.log(req.query, id);
 
     if (!id || !reservationId || !reservationDate) {
         return res.status(400).json({error: "Errore, formato non valido"});
@@ -880,7 +911,6 @@ app.get("/api/get-more-past-reservation", authenticateToken, async (req, res) =>
         
         const [reservations] = await pool.promise().execute(query, [id, reservationDate, reservationDate, reservationId]);
 
-        console.log(reservations);
 
         res.status(200).json(reservations);
         
@@ -907,7 +937,6 @@ app.post("/api/post-review", authenticateToken, async (req, res)=>{
         `;
 
         const [reviewState] = await pool.promise().execute(query, [rating, review, id, userId]);
-        console.log(reviewState);
 
         if (reviewState.affectedRows === 0) {
             return res.status(404).json({

@@ -1461,6 +1461,119 @@ margin: 0;
     font-weight: 600;
 }
 
+#coach-review-section{
+    text-align: center;
+    margin-top: 10em;
+    width: 90%;
+    min-height: 20em;
+    padding: 2em;
+    box-sizing: border-box;
+    border-radius: 30px;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+#coach-review-section h1{
+    margin: 0 0 0.5em;
+}
+
+#review-summary{
+    margin: 0 0 1.5em;
+    font-family: "Manrope", sans-serif;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #344e41;
+}
+
+#review-carosel{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    max-width: 60em;
+    margin: 0 auto;
+}
+
+.review-viewport{
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.review-track{
+    display: flex;
+    transition: transform 0.45s ease;
+}
+
+.review-card{
+    flex: 0 0 100%;
+    box-sizing: border-box;
+    padding: 1.5em;
+    border: 1px solid #d8e5d9;
+    border-radius: 20px;
+    background-color: #f7faf5;
+    font-family: "Manrope", sans-serif;
+    overflow-wrap: anywhere;
+}
+
+.review-card h2{
+    margin: 0 0 0.4em;
+    color: #344e41;
+}
+
+.review-rating, .review-meeting-date{
+    margin: 0.4em 0;
+}
+
+.review-rating span{
+    color: #c58919;
+    letter-spacing: 0.1em;
+}
+
+.review-text{
+    max-height: 9em;
+    overflow-y: auto;
+    margin-bottom: 0;
+}
+
+.review-arrow{
+    display: flex;
+    justify-content: center;
+    flex: 0 0 2.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: #344e41;
+    color: #fff;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.review-arrow:hover{
+    background-color: #31ad52;
+}
+
+.review-arrow:focus-visible{
+    outline: 3px solid #31ad52;
+    outline-offset: 3px;
+}
+
+@media (max-width: 600px){
+    #coach-review-section{
+        padding: 1.5em 0.75em;
+    }
+
+    #review-carosel{
+        gap: 0.3em;
+    }
+
+    .review-card{
+        padding: 1em;
+    }
+}
 
 /* ******************************************************* */
 /*                                                         */
