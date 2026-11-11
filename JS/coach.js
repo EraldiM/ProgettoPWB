@@ -9,6 +9,7 @@ const time_container = document.querySelector(".time-slot-div");
 const selectedDaySpan = document.getElementById("selected-day-span");
 const bookResponseDiv = document.getElementById("booking-response-div")
 const bookingDiv = document.getElementById("booking-div");
+const bookingNotes = document.getElementById("booking-notes");
 const bookOptionButton = document.getElementById("button-booking-options");
 const reviewSummary = document.getElementById("review-summary");
 const reviewCarosel = document.getElementById("review-carosel");
@@ -398,6 +399,11 @@ async function bookAppointment() {
         return;
     }
 
+    if (bookingNotes.value.length > 1000) {
+        setPopup("Note troppo lunghe", "Inserisci al massimo 1000 caratteri", bookingDiv);
+        return;
+    }
+
     const timeVar1 = sumDays(date2, selected_day).split("-").reverse().join("-") + " " + global_start_time.split("-")[0] + ":00";
     const timeVar2 = sumDays(date2, selected_day).split("-").reverse().join("-") + " " + global_start_time.split("-")[1] + ":00";
     bookButton.disabled = true;
@@ -409,7 +415,8 @@ async function bookAppointment() {
             body: JSON.stringify({
                 coach_id,
                 start_time: timeVar1,
-                end_time: timeVar2
+                end_time: timeVar2,
+                notes: bookingNotes.value.trim() || null
             })
         });
 
@@ -432,6 +439,7 @@ async function bookAppointment() {
         }
 
         if (res.status === 201) {
+            bookingNotes.value = "";
             const res_div = document.getElementById("booking-response-div");
             const res_p = document.createElement("p");
             res_p.textContent = `Prenotazione eseguita`;

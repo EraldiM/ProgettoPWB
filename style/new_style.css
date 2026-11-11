@@ -1432,6 +1432,7 @@ margin: 0;
 
 #date-book-button{
     font-size: 2em;
+    margin-bottom: 2em;
 }
 
 #selected-day-div{
@@ -1443,6 +1444,33 @@ margin: 0;
     font-family: "Manrope", sans-serif;
     font-weight: 600;
     font-size: 2.5em;
+}
+
+#booking-notes-div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+    margin: 2em;
+    font-family: "Manrope", sans-serif;
+}
+
+#booking-notes-div label{
+    font-size: 1.3em;
+    font-weight: 500;
+}
+
+#booking-notes{
+    width: 30em;
+    max-width: 100%;
+    height: 8em;
+    box-sizing: border-box;
+    padding: 1em;
+    border: 1px solid #555;
+    border-radius: 6px;
+    font-family: "Manrope", sans-serif;
+    font-size: 1.2em;
+    resize: none;
 }
 
 #booking-response-div{

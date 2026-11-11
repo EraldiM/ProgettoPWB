@@ -747,12 +747,17 @@ function checkForInvalidParameters(coach_id, user_id, start_time, end_time){
 }
 
 app.post("/api/booking", authenticateToken, async (req, res) =>{
-    const {coach_id, start_time, end_time} = req.body;
+    const {coach_id, start_time, end_time, notes} = req.body;
     const user_id = req.user.userID;
 
     if(checkForInvalidParameters(coach_id, user_id, start_time, end_time)) return res.status(400).json({error: "parametri non validi"});
 
-    const query = `INSERT INTO bookings (coach_id, user_id, start_at, end_at) VALUES (?, ?, ?, ?);`
+    if (notes != null && (typeof notes !== "string" || notes.length > 1000)) {
+        return res.status(400).json({error: "Le note devono essere un testo di massimo 1000 caratteri"});
+    }
+    const bookingNotes = notes?.trim() || null;
+
+    const query = `INSERT INTO bookings (coach_id, user_id, start_at, end_at, notes) VALUES (?, ?, ?, ?, ?);`
     const query2 = `SELECT id FROM bookings WHERE coach_id = ? AND status IN ('pending', 'confirmed') AND start_at < ? AND end_at > ? LIMIT 1;`
 
     try {
@@ -764,7 +769,7 @@ app.post("/api/booking", authenticateToken, async (req, res) =>{
         }
 
 
-        const row = await pool.promise().execute(query, [coach_id, user_id, start_time, end_time]);
+        const row = await pool.promise().execute(query, [coach_id, user_id, start_time, end_time, bookingNotes]);
 
         return res.status(201).json({
             success: "Prenotazione eseguita con successo",
